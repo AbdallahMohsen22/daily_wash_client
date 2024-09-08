@@ -1,0 +1,20 @@
+[
+    {
+        "author": {
+          "name": "abdullah",
+          "id": "user123"
+        },
+        "createdAt": 1638259200000,
+        "id": "text123",
+        "metadata": {
+          "additionalInfo": "Some additional information"
+        },
+        "remoteId": "remoteText123",
+        "repliedMessage": null,
+        "roomId": "room123",
+        "showStatus": true,
+        "status": "sent",
+        "type": "text",
+        "updatedAt": 1638259300000
+      }
+]
