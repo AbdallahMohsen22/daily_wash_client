@@ -134,6 +134,43 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:637468107690:android:416d375c92d7b45d5ec1d3",
+        "android_client_info": {
+          "package_name": "com.daily_wash_client_v1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "637468107690-3uk7n7mjagu6mt5lec000p3dkeaegql7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApOW4SKZWfgHfnzbPsdLiD20LLOyYwu8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "637468107690-3uk7n7mjagu6mt5lec000p3dkeaegql7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "637468107690-059rsm32hvabm8gfp0gk6t449qj328i7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dailyWashUser.pavilion",
+                "app_store_id": "6474781310"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:637468107690:android:3b12f75da207f1745ec1d3",
         "android_client_info": {
           "package_name": "com.daily_wash_delivery"
