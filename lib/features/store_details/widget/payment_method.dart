@@ -81,17 +81,17 @@ class PaymentMethod extends StatelessWidget {
                 // ),
 
                 ///visa new (comment now )
-                // PaymentItem(
-                //   paymentMethod: storeDetailsViewModel.paymentMethods.first,
-                //   isSelected: storeDetailsViewModel.selectPaymentMethod
-                //       == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first),
-                //   onTap: () {
-                //     storeDetailsViewModel.setSelectedPaymentMethod(
-                //         storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first)
-                //     );
-                //   },
-                //   noPaymentImage:false,
-                // ),
+                PaymentItem(
+                  paymentMethod: storeDetailsViewModel.paymentMethods.first,
+                  isSelected: storeDetailsViewModel.selectPaymentMethod
+                      == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first),
+                  onTap: () {
+                    storeDetailsViewModel.setSelectedPaymentMethod(
+                        storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first)
+                    );
+                  },
+                  noPaymentImage:false,
+                ),
 
                 ///cash
                 PaymentItem(
