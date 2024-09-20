@@ -13,10 +13,11 @@ import '../../../core/widget/form_title.dart';
 
 class LoginForm extends StatefulWidget {
   LoginForm({
-    required this.phoneController,required this.formKey
+    required this.phoneController,required this.formKey,required this.password
   });
 
   TextEditingController phoneController;
+  TextEditingController password;
   GlobalKey<FormState> formKey;
 
 
@@ -28,13 +29,13 @@ class _LoginFormState extends State<LoginForm> {
 
 
   final FocusNode phoneFocusNode = FocusNode();
-
+  final FocusNode password = FocusNode();
   @override
   void dispose() {
     super.dispose();
 
     widget.phoneController.dispose();
-
+    widget.password.dispose();
     phoneFocusNode.dispose();
   }
 
@@ -51,6 +52,7 @@ class _LoginFormState extends State<LoginForm> {
             filled: true,
             inputType: TextInputType.number,
             focusNode: phoneFocusNode,
+            nextFocus: password,
             prefix: Align(
               widthFactor: 1.5,
               heightFactor: 1.0,
@@ -77,6 +79,23 @@ class _LoginFormState extends State<LoginForm> {
             hint: 'phone_number'.tr(),
             controller: widget.phoneController,
             validator: FormValidation.phoneNumberValidation,
+          ),
+
+          const Gap(10),
+          FormTitle(title: 'password'.tr()),
+          const Gap(10),
+          CustomField(
+            isPassword: true,
+            filled: true,
+            inputType: TextInputType.visiblePassword,
+            focusNode: password,
+
+            // formatter: [
+            //   FilteringTextInputFormatter.digitsOnly
+            // ],
+            hint: 'password'.tr(),
+            controller: widget.password,
+            validator: FormValidation.passwordValidator,
           ),
         ],
       ),

@@ -36,12 +36,14 @@ class StripeService {
           // customerEphemeralKeySecret: initPaymentSheetInputModel.ephemeralKeySecret,
           // customerId: initPaymentSheetInputModel.customerId,
         merchantDisplayName: 'Daily Wash', // Your business name
-        // applePay: PaymentSheetApplePay(merchantCountryCode: 'AE'),
+        applePay: PaymentSheetApplePay(
+            merchantCountryCode: 'AE'
+        ),
         // Enable Google Pay
         googlePay: PaymentSheetGooglePay(
           merchantCountryCode: 'AE', // Set your merchant's country code
           currencyCode: 'AED',        // Set your currency code for the transaction
-          // testEnv: true,              // Use test environment during development
+          testEnv: true,              // Use test environment during development
         ),
       ),
     );

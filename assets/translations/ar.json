@@ -35,6 +35,7 @@
     "full_name":"الاسم الكامل",
     "phone_number_required":"رقم الهاتف مطلوب",
     "phone_number":"رقم الهاتف",
+    "password":"كلمة المرور",
     "enter_phone_number":"أدخل رقم الهاتف",
     "save_changes":"حفظ التغييرات",
     "Language":"لغة",
