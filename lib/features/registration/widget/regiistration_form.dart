@@ -30,12 +30,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
   GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController password = TextEditingController();
  // TextEditingController buildingNameController = TextEditingController();
  // TextEditingController floorNumberController = TextEditingController();
  // TextEditingController apartmentNumberController = TextEditingController();
   TextEditingController distinguishedLandmarkController = TextEditingController();
   final FocusNode nameFocusNode = FocusNode();
   final FocusNode phoneFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
  // final FocusNode buildingNameFocusNode = FocusNode();
  // final FocusNode floorNumberFocusNode = FocusNode();
  // final FocusNode apartmentNumberFocusNode = FocusNode();
@@ -48,6 +50,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     phoneController.dispose();
     nameFocusNode.dispose();
     phoneFocusNode.dispose();
+    password.dispose();
    // buildingNameController.dispose();
    // buildingNameFocusNode.dispose();
    // floorNumberController.dispose();
@@ -78,6 +81,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           ),
           const Gap(15),
           FormTitle(title: 'phone_number'.tr()),
+
           const Gap(10),
           CustomField(
             filled: true,
@@ -111,7 +115,21 @@ class _RegistrationFormState extends State<RegistrationForm> {
             controller: phoneController,
             validator: FormValidation.phoneNumberValidation,
           ),
-          // const Gap(15),
+          const Gap(15),
+          FormTitle(title: 'password'.tr()),
+          CustomField(
+            isPassword: true,
+            filled: true,
+            inputType: TextInputType.visiblePassword,
+            focusNode: passwordFocusNode,
+
+            // formatter: [
+            //   FilteringTextInputFormatter.digitsOnly
+            // ],
+            hint: 'password'.tr(),
+            controller: password,
+            validator: FormValidation.passwordValidator,
+          ),
           // FormTitle(title: 'building_name'.tr()),
           // const Gap(10),
           // CustomField(

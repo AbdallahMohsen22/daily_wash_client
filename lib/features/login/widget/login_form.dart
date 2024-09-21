@@ -50,7 +50,7 @@ class _LoginFormState extends State<LoginForm> {
           const Gap(10),
           CustomField(
             filled: true,
-            inputType: TextInputType.number,
+            inputType: TextInputType.emailAddress,
             focusNode: phoneFocusNode,
             nextFocus: password,
             prefix: Align(
