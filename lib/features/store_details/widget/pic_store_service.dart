@@ -19,7 +19,7 @@ class PickStoreServiceType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
@@ -29,7 +29,7 @@ class PickStoreServiceType extends StatelessWidget {
             color: ColorResources.black,
           ),
         ),
-        const Gap(15),
+        const Gap(50),
         BlocBuilder<GenericCubit<int?>, GenericCubitState<int?>>(
           bloc: storeDetailsViewModel.serviceTypeCubit,
           builder: (context, state) => Wrap(

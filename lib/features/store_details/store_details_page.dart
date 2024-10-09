@@ -21,9 +21,7 @@ import 'package:on_express/features/store_details/widget/pic_store_service.dart'
 import 'package:on_express/features/store_details/widget/pick_delivery_service.dart';
 import 'package:on_express/features/store_details/widget/store_image.dart';
 import 'package:on_express/models/providers_model.dart';
-import 'package:on_express/models/settings_model.dart';
 
-import '../../core/widget/ui.dart';
 import '../../cubits/app_cubit/app_cubit.dart';
 import '../../cubits/app_cubit/app_states.dart';
 import '../../cubits/menu_cubit/menu_cubit.dart';
@@ -31,10 +29,7 @@ import '../../cubits/menu_cubit/menu_states.dart';
 import '../payment/data/repos/checkout_repo_impl.dart';
 import '../payment/presentation/manager/cuibt/payment_cuibt.dart';
 import '../payment/presentation/manager/cuibt/payment_state.dart';
-import '../payment/presentation/views/thank_you_view.dart';
 import '../payment/presentation/views/widgets/custom_botton_bloc_consumer.dart';
-import '../payment/presentation/views/widgets/my_cart_view_body.dart';
-import '../payment/presentation/views/widgets/payment_method_bottom_sheet.dart';
 
 // ignore: must_be_immutable
 class StoreDetailsPage extends StatelessWidget {
@@ -76,11 +71,11 @@ class StoreDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   StoreImage(provider: provider),
-                  const Gap(20),
+                  const Gap(30),
                   PickStoreServiceType(
                     storeDetailsViewModel: storeDetailsViewModel,
                   ),
-                  const Gap(20),
+                  const Gap(10),
                   PickDeliveryService(
                     storeDetailsViewModel: storeDetailsViewModel,
                   ),
