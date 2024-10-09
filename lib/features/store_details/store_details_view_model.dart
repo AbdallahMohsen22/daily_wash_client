@@ -35,10 +35,10 @@ class StoreDetailsViewModel {
       title: "delivery".tr(),
       imageUrl: ImageResources.delivery,
     ),
-    ServiceTypeModel(
-      title: "pickup".tr(),
-      imageUrl: ImageResources.pickup,
-    ),
+    // ServiceTypeModel(
+    //   title: "pickup".tr(),
+    //   imageUrl: ImageResources.pickup,
+    // ),
   ];
 
   List<String> selectedDeliveryService = [

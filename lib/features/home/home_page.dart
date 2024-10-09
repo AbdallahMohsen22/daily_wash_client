@@ -46,15 +46,12 @@ class HomePage extends StatelessWidget {
               ),
               ConditionalBuilder(
                 condition: cubit.providersModel!=null ,
-                fallback: (c)=>SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                          (context, index) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0),
-                            child: CustomShimmer(width:context.width,
-                                height:context.height * 0.15),
-                          ),
-                      childCount: 10),
-                ),
+                fallback: (c)=>SliverToBoxAdapter(child: Padding(
+                    padding: EdgeInsets.only(top: 100),
+                    child: Center(child: Text(
+                      'no_laundries_yet'.tr(),
+                      style: TextStyle(fontWeight: FontWeight.w700,fontSize: 20),
+                    )))),
                 builder: (c)=> ConditionalBuilder(
                   condition: cubit.providersModel!.data!.isNotEmpty,
                   fallback: (c)=>SliverToBoxAdapter(child: Padding(
