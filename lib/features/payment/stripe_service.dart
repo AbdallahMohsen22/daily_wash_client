@@ -37,6 +37,8 @@ class StripeService {
           // customerEphemeralKeySecret: initPaymentSheetInputModel.ephemeralKeySecret,
           // customerId: initPaymentSheetInputModel.customerId,
         merchantDisplayName: 'Daily Wash', // Your business name
+
+        // Enable applePay
         // applePay: PaymentSheetApplePay(
         //     merchantCountryCode: 'AE'
         // ),
