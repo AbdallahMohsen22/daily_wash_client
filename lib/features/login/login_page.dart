@@ -22,6 +22,7 @@ class LoginPage extends StatelessWidget {
   LoginPage({this.fromLogin = true});
 
   TextEditingController phoneController = TextEditingController();
+  TextEditingController password = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey();
 
   bool fromLogin;
@@ -53,7 +54,7 @@ class LoginPage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    LoginForm(phoneController: phoneController,formKey: formKey),
+                    LoginForm(phoneController: phoneController,formKey: formKey,password: password,),
                     const Gap(30),
                     ConditionalBuilder(
                       condition: state is! CreateUserLoadingState,

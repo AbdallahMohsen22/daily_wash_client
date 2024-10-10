@@ -81,30 +81,30 @@ class PaymentMethod extends StatelessWidget {
                 // ),
 
                 ///visa new (comment now )
-                // PaymentItem(
-                //   paymentMethod: storeDetailsViewModel.paymentMethods.first,
-                //   isSelected: storeDetailsViewModel.selectPaymentMethod
-                //       == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first),
-                //   onTap: () {
-                //     storeDetailsViewModel.setSelectedPaymentMethod(
-                //         storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first)
-                //     );
-                //   },
-                //   noPaymentImage:false,
-                // ),
-
-                ///cash
                 PaymentItem(
-                  paymentMethod: storeDetailsViewModel.paymentMethods.last,
+                  paymentMethod: storeDetailsViewModel.paymentMethods.first,
                   isSelected: storeDetailsViewModel.selectPaymentMethod
-                      == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last),
+                      == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first),
                   onTap: () {
                     storeDetailsViewModel.setSelectedPaymentMethod(
-                        storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last)
+                        storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first)
                     );
                   },
-                  noPaymentImage:true,
-                )
+                  noPaymentImage:false,
+                ),
+
+                ///cash
+                // PaymentItem(
+                //   paymentMethod: storeDetailsViewModel.paymentMethods.last,
+                //   isSelected: storeDetailsViewModel.selectPaymentMethod
+                //       == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last),
+                //   onTap: () {
+                //     storeDetailsViewModel.setSelectedPaymentMethod(
+                //         storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last)
+                //     );
+                //   },
+                //   noPaymentImage:true,
+                // )
               ],
             );
           },

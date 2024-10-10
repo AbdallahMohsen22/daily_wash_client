@@ -45,6 +45,7 @@ Future<void> main() async {
 
   //My puplishableKey for test mode
   Stripe.publishableKey = ApiKeys.puplishableKeyLive;
+  Stripe.merchantIdentifier = 'merchant.com.DaliyWashUser.pavilion';
 
 
   String? loca = CacheManager.getString(AppConstants.languageCode);

@@ -1,13 +1,13 @@
 class ApiKeys {
-  //test mode Stripe daily wash
-  static String secretKey = 'sk_test_51PYpwYRouqtBJPElp3OWpabbiIgI04zA4L8LHzrXq0Jqi61CP0LaSwf6ZIUJSR75ekDWdVmrNCbS4L53RTId5yaq00YnLEBR8D';
+  //test mode Stripe RD
+  static String secretKey = 'sk_test_51PaZsWAfOTM3C8xouFPJ4jkqyWh4Hc1YYQB2wjdQ7xAyTDRLdoWDBb7Ac8lFVUzgrkzM8lCLmUCymQq5c4kIY9Au00x6xvEcQO';
 
-  static String puplishableKey = 'pk_test_51PYpwYRouqtBJPElC5VKCqFVfO3lhe8Q4t59URBk88cnB1YuCkTbXxOGTum7Ubz6MbFb9PF2p91z01vMIGjRuDQ100KIeIlydB';
+  static String puplishableKey = 'pk_test_51PaZsWAfOTM3C8xonfiRMudJi26Lapf87lkNbv1q2cSSjqzm8xCBGr3KV56cNQcb5TxHZptjTPYlIUK3Io3Fd1OD00W0bR8hSj';
 
-  //live mode Stripe daily wash
-  static String secretKeyLive = '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';
+  //live mode Stripe RD
+  static String secretKeyLive = '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';
 
-  static String puplishableKeyLive = 'pk_live_51PYpwYRouqtBJPElmXdCwHHkkEVqDu5ue6kcdSODz8GJhN6uIODeV0O5caGajZjHCoqzgjtvOBwGWdFcsI0EUfWI00sCIHrEr2';
+  static String puplishableKeyLive = 'pk_live_51PaZsWAfOTM3C8xopzd0z7ZV7OxEmRkm6QVNn5shDQZXJMIN2F2S9pwi3WxT6DlBDcvdyeyMotw74mkxZZdirB9Z000w2YQRfI';
 
   // //paypal keys
   // static String clientID = "Aaj_SFXNqbINTpdG4KqHkuhwW61QUDyi3rYkdqo5ij45KJBpcnS-oC1_-qTZ2ADuR-FKU3tkwS5ftkuR";

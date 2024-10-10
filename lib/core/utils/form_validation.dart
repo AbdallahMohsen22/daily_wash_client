@@ -17,6 +17,15 @@ class FormValidation {
     }
     return null;
   }
+  static String? passwordValidator(String? value) {
+    if (value!.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  }
 
   static String? nationalIdValidation(String? value) {
     if (value!.isEmpty) {
