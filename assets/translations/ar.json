@@ -4,6 +4,8 @@
     "pick_service_type":"اختر نوع الخدمة",
     "delivery":"توصيل",
     "pickup":"استلم بنفسي",
+    "urgent":"مستعجل",
+    "normal":"عادي",
     "laundromats_near_you":"مغاسل الملابس القريبة منك",
     "search_with_name":"البحث باسم",
     "store":"المغسلة",

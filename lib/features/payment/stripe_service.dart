@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'api_keys.dart';
 import 'api_service_payment.dart';
@@ -39,15 +40,19 @@ class StripeService {
         merchantDisplayName: 'Daily Wash', // Your business name
 
         // Enable applePay
-        // applePay: PaymentSheetApplePay(
-        //     merchantCountryCode: 'AE'
-        // ),
+        applePay: PaymentSheetApplePay(
+            merchantCountryCode: 'AE',
+          buttonType: PlatformButtonType.buy,
+
+        ),
         // Enable Google Pay
         googlePay: PaymentSheetGooglePay(
           merchantCountryCode: 'AE', // Set your merchant's country code
-          currencyCode: 'AED',        // Set your currency code for the transaction
+          currencyCode: 'AED',
+          // Set your currency code for the transaction
           // testEnv: true,              // Use test environment during development
         ),
+        style: ThemeMode.dark,
       ),
     );
 

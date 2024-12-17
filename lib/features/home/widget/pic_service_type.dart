@@ -85,16 +85,16 @@ class ServiceItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CustomAssetImage(
-              imageUrl: serviceTypeModel.imageUrl,
-              height: AppSize.h50,
-              width: context.width * 0.2,
-            ),
-            const Gap(5),
+            // CustomAssetImage(
+            //   imageUrl: serviceTypeModel.imageUrl,
+            //   height: AppSize.h50,
+            //   width: context.width * 0.2,
+            // ),
+            // const Gap(5),
             Text(
               serviceTypeModel.title,
               style: FontManager.getSemiBold(
-                fontSize: AppSize.sp12,
+                fontSize: AppSize.sp25,
                 color: ColorResources.black75,
               ),
             )

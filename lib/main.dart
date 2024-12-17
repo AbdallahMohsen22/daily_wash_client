@@ -45,6 +45,10 @@ Future<void> main() async {
 
   //My puplishableKey for test mode
   Stripe.publishableKey = ApiKeys.puplishableKeyLive;
+  Stripe.merchantIdentifier = 'merchant.com.DaliyWashUser.pavilion';
+  Stripe.urlScheme = 'flutterstripe';
+  await Stripe.instance.applySettings();
+
 
 
   String? loca = CacheManager.getString(AppConstants.languageCode);

@@ -10,6 +10,16 @@ class ImageResources {
   static const String call = 'assets/images/call.png';
   static const String pickup = 'assets/images/pickup.png';
   static const String delivery = 'assets/images/delivery.png';
+  static const String urgent = 'assets/images/urgent.png';
+  static const String pants = 'assets/images/pants.png';
+  static const String shoes = 'assets/images/shoes.png';
+  static const String shirt1 = 'assets/images/shirt.png';
+  static const String jacket = 'assets/images/jacket.png';
+  static const String shorts = 'assets/images/shorts.png';
+  static const String shirt2 = 'assets/images/t-shirt.png';
+  static const String bra = 'assets/images/bra.png';
+  static const String underwear = 'assets/images/underwear.png';
+  static const String blueDress = 'assets/images/blue_dress.png';
   static const String laundromat = 'assets/images/laundromat.jpg';
   static const String favourite = 'assets/images/favourite.png';
   static const String distance = 'assets/images/distance.png';

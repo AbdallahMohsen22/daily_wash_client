@@ -4,6 +4,8 @@
     "pick_service_type":"Pick Service type",
     "delivery":"Delivery",
     "pickup":"Pickup",
+    "urgent":"Urgent",
+    "normal":"Normal",
     "laundromats_near_you":"Laundromats near you",
     "search_with_name":"Search with name of",
     "store":"Laundry",

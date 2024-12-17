@@ -1,6 +1,6 @@
 class ProvidersModel {
   String? message;
-  bool? status;
+  int? status;
   List<ProviderData>? data;
 
   ProvidersModel({this.message, this.status, this.data});
@@ -11,7 +11,7 @@ class ProvidersModel {
     if (json['data'] != null) {
       data = <ProviderData>[];
       json['data'].forEach((v) {
-        data!.add(new ProviderData.fromJson(v));
+        data!.add(ProviderData.fromJson(v));
       });
     }
   }
@@ -60,13 +60,13 @@ class Data {
   Data({this.currentPage, this.pages, this.count, this.data});
 
   Data.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    pages = json['pages'];
-    count = json['count'];
+    currentPage = _parseInt(json['currentPage']);
+    pages = _parseInt(json['pages']);
+    count = _parseInt(json['count']);
     if (json['data'] != null) {
       data = <ProviderData>[];
       json['data'].forEach((v) {
-        data!.add(new ProviderData.fromJson(v));
+        data!.add(ProviderData.fromJson(v));
       });
     }
   }
@@ -80,6 +80,16 @@ class Data {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  // Safe parsing function for integers
+  int _parseInt(dynamic value) {
+    if (value is String) {
+      return int.tryParse(value) ?? 0;
+    } else if (value is int) {
+      return value;
+    }
+    return 0;
   }
 }
 
@@ -101,34 +111,39 @@ class ProviderData {
   String? address;
   bool? isFavorited;
   List<Reviews>? reviews;
-  List<Null>? rates;
+  List<dynamic>? rates;
   String? createdAt;
   String? distance;
+  List<PricingItem>? pricingItems;
+  bool? isDelivery;
 
-  ProviderData(
-      {this.id,
-        this.itemNumber,
-        this.name,
-        this.currentLatitude,
-        this.currentLongitude,
-        this.firebaseToken,
-        this.whatsappNumber,
-        this.phoneNumber,
-        this.personalPhoto,
-        this.currentLanguage,
-        this.totalRate,
-        this.totalRateNumber,
-        this.totalRateCount,
-        this.status,
-        this.address,
-        this.isFavorited,
-        this.reviews,
-        this.rates,
-        this.createdAt});
+  ProviderData({
+    this.id,
+    this.itemNumber,
+    this.name,
+    this.currentLatitude,
+    this.currentLongitude,
+    this.firebaseToken,
+    this.whatsappNumber,
+    this.phoneNumber,
+    this.personalPhoto,
+    this.currentLanguage,
+    this.totalRate,
+    this.totalRateNumber,
+    this.totalRateCount,
+    this.status,
+    this.address,
+    this.isFavorited,
+    this.reviews,
+    this.rates,
+    this.createdAt,
+    this.pricingItems,
+    this.isDelivery,
+  });
 
   ProviderData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    itemNumber = json['item_number'];
+    itemNumber = _parseInt(json['item_number']);
     name = json['name'];
     currentLatitude = json['current_latitude'];
     currentLongitude = json['current_longitude'];
@@ -137,66 +152,78 @@ class ProviderData {
     phoneNumber = json['phone_number'];
     personalPhoto = json['personal_photo'];
     currentLanguage = json['current_language'];
-    totalRate = json['total_rate'];
-    totalRateNumber = json['total_rate_number'];
-    totalRateCount = json['total_rate_count'];
+    totalRate = _parseInt(json['total_rate']);
+    totalRateNumber = _parseInt(json['total_rate_number']);
+    totalRateCount = _parseInt(json['total_rate_count']);
     status = json['status'];
     address = json['address'];
     isFavorited = json['is_favorited'];
-    distance = json['distance'];
-    if (json['reviews'] != null) {
-      reviews = <Reviews>[];
-      json['reviews'].forEach((v) {
-        reviews!.add(new Reviews.fromJson(v));
-      });
-    }
-    // if (json['rates'] != null) {
-    //   rates = <Null>[];
-    //   json['rates'].forEach((v) {
-    //     rates!.add(new Null.fromJson(v));
-    //   });
-    // }
+    isDelivery = json['is_delivery'];
     createdAt = json['created_at'];
+    if (json['reviews'] != null) {
+      reviews = (json['reviews'] as List)
+          .map((v) => Reviews.fromJson(v))
+          .toList();
+    }
+    rates = json['rates'];
+    if (json['pricingItems'] != null) {
+      pricingItems = List.from(json['pricingItems']?.map((item) => PricingItem.fromJson(item)) ?? []);
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['item_number'] = this.itemNumber;
-    data['name'] = this.name;
-    data['current_latitude'] = this.currentLatitude;
-    data['current_longitude'] = this.currentLongitude;
-    data['firebase_token'] = this.firebaseToken;
-    data['whatsapp_number'] = this.whatsappNumber;
-    data['phone_number'] = this.phoneNumber;
-    data['personal_photo'] = this.personalPhoto;
-    data['current_language'] = this.currentLanguage;
-    data['total_rate'] = this.totalRate;
-    data['total_rate_number'] = this.totalRateNumber;
-    data['total_rate_count'] = this.totalRateCount;
-    data['status'] = this.status;
-    data['address'] = this.address;
-    data['is_favorited'] = this.isFavorited;
-    if (this.reviews != null) {
-      data['reviews'] = this.reviews!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['item_number'] = itemNumber;
+    data['name'] = name;
+    data['current_latitude'] = currentLatitude;
+    data['current_longitude'] = currentLongitude;
+    data['firebase_token'] = firebaseToken;
+    data['whatsapp_number'] = whatsappNumber;
+    data['phone_number'] = phoneNumber;
+    data['personal_photo'] = personalPhoto;
+    data['current_language'] = currentLanguage;
+    data['total_rate'] = totalRate;
+    data['total_rate_number'] = totalRateNumber;
+    data['total_rate_count'] = totalRateCount;
+    data['status'] = status;
+    data['address'] = address;
+    data['is_favorited'] = isFavorited;
+    data['is_delivery'] = isDelivery;
+    data['created_at'] = createdAt;
+    if (reviews != null) {
+      data['reviews'] = reviews!.map((v) => v.toJson()).toList();
     }
-    // if (this.rates != null) {
-    //   data['rates'] = this.rates!.map((v) => v.toJson()).toList();
-    // }
-    data['created_at'] = this.createdAt;
+    data['rates'] = rates;
+    if (pricingItems != null) {
+      data['pricingItems'] =
+          pricingItems!.map((v) => v.toJson()).toList();
+    }
     return data;
+  }
+
+  // Safe parsing function for integers
+  int _parseInt(dynamic value) {
+    if (value is String) {
+      return int.tryParse(value) ?? 0;
+    } else if (value is int) {
+      return value;
+    }
+    return 0;
   }
 }
 
 class Reviews {
   String? id;
+  String? username;
   int? rate;
   String? content;
 
-  Reviews({this.id, this.rate, this.content});
+  Reviews({this.id, this.rate, this.content,this.username});
 
   Reviews.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    username = json['user_name'];
     rate = json['rate'];
     content = json['content'];
   }
@@ -204,8 +231,34 @@ class Reviews {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['user_name'] = this.username;
     data['rate'] = this.rate;
     data['content'] = this.content;
+    return data;
+  }
+}
+
+class PricingItem {
+  String? id;
+  String? name;
+  String? icon;
+  int? price;
+
+  PricingItem({this.id, this.name, this.icon, this.price});
+
+  PricingItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    icon = json['icon'];
+    price = json['price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['icon'] = icon;
+    data['price'] = price;
     return data;
   }
 }

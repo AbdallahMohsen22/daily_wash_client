@@ -15,10 +15,22 @@ import '../../cubits/app_cubit/app_cubit.dart';
 import '../../cubits/app_cubit/app_states.dart';
 
 // ignore: must_be_immutable
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   HomeViewModel homeViewModel = HomeViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    AppCubit.get(context).getCurrentLocation(context);
+    AppCubit.get(context).getProviders();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +61,7 @@ class HomePage extends StatelessWidget {
                 fallback: (c)=>SliverToBoxAdapter(child: Padding(
                     padding: EdgeInsets.only(top: 100),
                     child: Center(child: Text(
-                      'no_laundries_yet'.tr(),
+                      'no_laundries_yet'.tr(),  //providersModel == null
                       style: TextStyle(fontWeight: FontWeight.w700,fontSize: 20),
                     )))),
                 builder: (c)=> ConditionalBuilder(
