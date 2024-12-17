@@ -26,6 +26,7 @@ import '../../cubits/app_cubit/app_cubit.dart';
 import '../../cubits/app_cubit/app_states.dart';
 import '../../cubits/menu_cubit/menu_cubit.dart';
 import '../../cubits/menu_cubit/menu_states.dart';
+import '../home/widget/clothes_widget.dart';
 import '../payment/data/repos/checkout_repo_impl.dart';
 import '../payment/presentation/manager/cuibt/payment_cuibt.dart';
 import '../payment/presentation/manager/cuibt/payment_state.dart';
@@ -70,6 +71,8 @@ class StoreDetailsPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+
                   StoreImage(provider: provider),
                   const Gap(30),
                   PickStoreServiceType(
@@ -79,6 +82,8 @@ class StoreDetailsPage extends StatelessWidget {
                   PickDeliveryService(
                     storeDetailsViewModel: storeDetailsViewModel,
                   ),
+                  const Gap(10),
+                  ClothesCounterWidget(),
                   const Gap(30),
                   DateAndTimeWidget(
                     storeDetailsViewModel: storeDetailsViewModel,

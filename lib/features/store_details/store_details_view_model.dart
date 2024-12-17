@@ -32,13 +32,13 @@ class StoreDetailsViewModel {
 
   List<ServiceTypeModel> serviceTypes = [
     ServiceTypeModel(
-      title: "delivery".tr(),
-      imageUrl: ImageResources.delivery,
+      title: "urgent".tr(),
+      imageUrl: ImageResources.urgent,
     ),
-    // ServiceTypeModel(
-    //   title: "pickup".tr(),
-    //   imageUrl: ImageResources.pickup,
-    // ),
+    ServiceTypeModel(
+      title: "normal".tr(),
+      imageUrl: ImageResources.urgent,
+    ),
   ];
 
   List<String> selectedDeliveryService = [
