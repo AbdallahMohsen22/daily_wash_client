@@ -252,59 +252,6 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  void getProviders({
-    int page = 1,
-    String? rate,
-  }) {
-    emit(GetProvidersLoadingState());
-    DioHelper.getData(
-      url: EndPoints.getProviders,
-      query: {
-        "page": page,
-        // "limit": 200,
-        if (searchController.text.isNotEmpty) "name": searchController.text,
-        // if (rate != null) "rate": 'highest',
-        if (position != null) "current_latitude": position?.latitude,
-        if (position != null) "current_longitude": position?.longitude,
-        // if (position == null) "current_latitude": '3.07796442',
-        // if (position == null) "current_longitude": '101.5865449',
-      },
-      token: 'Bearer $token',
-    ).then((value) {
-      print(value.data);
-      if (value.data['status'] == true && value.data['data'] != null) {
-        if (value.statusCode == 200) {
-          print("Api status message====>>>>${value.statusMessage}");
-          print("Api status code========>>>>${value.data}");
-          print("Api Get Providers========>>>>>>>>>>${providersModel!.data}");
-          print("Api Get Providers========>>>>>>>>>>${providersModel!.status}");
-          print("Api Get Providers========>>>>>>>>>>${providersModel!.message}");
-          providersModel = ProvidersModel.fromJson(value.data);
-          takeFav(providersModel!.data!);
-          // if(page == 1) {
-          //
-          // }
-          // else{
-          //   providersModel!.currentPage = value.data['data']['currentPage'];
-          //   providersModel!.data!.pages = value.data['data']['pages'];
-          //   value.data['data']['data'].forEach((e){
-          //     providersModel!.data!.data!.add(ProviderData.fromJson(e));
-          //   });
-          //   takeFav(providersModel!.data!.data!);
-          // }
-          emit(GetProvidersSuccessState());
-        }
-      } else {
-        // emit(GetProvidersWrongState());
-        print("Error 400== >>");
-        emit(GetProvidersErrorState());
-      }
-    }).catchError((e) {
-      print("Error parsing data: ${e.toString()}");
-      emit(GetProvidersErrorState());
-    });
-  }
-
   // void getProviders({
   //   int page = 1,
   //   String? rate,
@@ -314,61 +261,118 @@ class AppCubit extends Cubit<AppStates> {
   //     url: EndPoints.getProviders,
   //     query: {
   //       "page": page,
+  //       // "limit": 200,
   //       if (searchController.text.isNotEmpty) "name": searchController.text,
+  //       // if (rate != null) "rate": 'highest',
   //       if (position != null) "current_latitude": position?.latitude,
   //       if (position != null) "current_longitude": position?.longitude,
+  //       // if (position == null) "current_latitude": '3.07796442',
+  //       // if (position == null) "current_longitude": '101.5865449',
   //     },
   //     token: 'Bearer $token',
   //   ).then((value) {
-  //     print(value.data); // Inspect the response data
-  //     if (value.data != null) {
+  //     print(value.data);
+  //     if (value.data['status'] == true && value.data['data'] != null) {
   //       if (value.statusCode == 200) {
   //         print("Api status message====>>>>${value.statusMessage}");
   //         print("Api status code========>>>>${value.data}");
-  //
-  //         // Handle the response assuming it is a list
-  //         try {
-  //           // Assuming the response is a list of provider objects
-  //           List<dynamic> providersList = value.data;
-  //
-  //           // Loop through each provider and process them
-  //           providersList.forEach((providerData) {
-  //             // You can now handle each provider object
-  //             print("Provider Data: $providerData");
-  //
-  //             // Parse the individual provider data
-  //             var provider = ProvidersModel.fromJson(providerData);
-  //             print("Parsed Provider: ${provider.message}");
-  //
-  //             // If necessary, handle any nested fields (e.g., pricingItems)
-  //             List pricingItems = providerData['pricingItems'] ?? [];
-  //             pricingItems.forEach((item) {
-  //               int price = int.tryParse(item['price'].toString()) ?? 0; // Ensure it's an int
-  //               print("Item price: $price");
-  //             });
-  //           });
-  //
-  //           // Emit success state after processing
-  //           emit(GetProvidersSuccessState());
-  //         } catch (e, stackTrace) {
-  //           print("Error parsing fields: ${e.toString()}");
-  //           print("Stack trace: $stackTrace"); // This prints the stack trace
-  //           emit(GetProvidersErrorState());
-  //         }
-  //       } else {
-  //         print("Error: ${value.statusMessage}");
-  //         emit(GetProvidersErrorState());
+  //         print("Api Get Providers========>>>>>>>>>>${providersModel!.data}");
+  //         print("Api Get Providers========>>>>>>>>>>${providersModel!.status}");
+  //         print("Api Get Providers========>>>>>>>>>>${providersModel!.message}");
+  //         providersModel = ProvidersModel.fromJson(value.data);
+  //         takeFav(providersModel!.data!);
+  //         // if(page == 1) {
+  //         //
+  //         // }
+  //         // else{
+  //         //   providersModel!.currentPage = value.data['data']['currentPage'];
+  //         //   providersModel!.data!.pages = value.data['data']['pages'];
+  //         //   value.data['data']['data'].forEach((e){
+  //         //     providersModel!.data!.data!.add(ProviderData.fromJson(e));
+  //         //   });
+  //         //   takeFav(providersModel!.data!.data!);
+  //         // }
+  //         emit(GetProvidersSuccessState());
   //       }
   //     } else {
-  //       print("Error 400: No data found");
+  //       // emit(GetProvidersWrongState());
+  //       print("Error 400== >>");
   //       emit(GetProvidersErrorState());
   //     }
-  //   }).catchError((e, stackTrace) {
+  //   }).catchError((e) {
   //     print("Error parsing data: ${e.toString()}");
-  //     print("Stack trace: $stackTrace"); // This prints the stack trace
   //     emit(GetProvidersErrorState());
   //   });
   // }
+
+  void getProviders({
+    int page = 1,
+    String? rate,
+  }) {
+    emit(GetProvidersLoadingState());
+    DioHelper.getData(
+      url: EndPoints.getProviders,
+      query: {
+              "page": page,
+              // "limit": 200,
+              if (searchController.text.isNotEmpty) "name": searchController.text,
+              // if (rate != null) "rate": 'highest',
+              if (position != null) "current_latitude": position?.latitude,
+              if (position != null) "current_longitude": position?.longitude,
+              // if (position == null) "current_latitude": '3.07796442',
+              // if (position == null) "current_longitude": '101.5865449',
+      },
+      token: 'Bearer $token',
+    ).then((value) {
+      print(value.data); // Inspect the response data
+      if (value.data != null) {
+        if (value.statusCode == 200) {
+          print("Api status message====>>>>${value.statusMessage}");
+          print("Api status code========>>>>${value.data}");
+
+          // Handle the response assuming it is a list
+          try {
+            // Assuming the response is a list of provider objects
+            List<dynamic> providersList = value.data;
+
+            // Loop through each provider and process them
+            providersList.forEach((providerData) {
+              // You can now handle each provider object
+              print("Provider Data: $providerData");
+
+              // Parse the individual provider data
+              var provider = ProvidersModel.fromJson(providerData);
+              print("Parsed Provider: ${provider.message}");
+
+              // If necessary, handle any nested fields (e.g., pricingItems)
+              List pricingItems = providerData['pricingItems'] ?? [];
+              pricingItems.forEach((item) {
+                int price = int.tryParse(item['price'].toString()) ?? 0; // Ensure it's an int
+                print("Item price: $price");
+              });
+            });
+
+            // Emit success state after processing
+            emit(GetProvidersSuccessState());
+          } catch (e, stackTrace) {
+            print("Error parsing fields: ${e.toString()}");
+            print("Stack trace: $stackTrace"); // This prints the stack trace
+            emit(GetProvidersErrorState());
+          }
+        } else {
+          print("Error: ${value.statusMessage}");
+          emit(GetProvidersErrorState());
+        }
+      } else {
+        print("Error 400: No data found");
+        emit(GetProvidersErrorState());
+      }
+    }).catchError((e, stackTrace) {
+      print("Error parsing data: ${e.toString()}");
+      print("Stack trace: $stackTrace"); // This prints the stack trace
+      emit(GetProvidersErrorState());
+    });
+  }
 
   // void paginationProviders(BuildContext context){
   //   providersScrollerController.addListener(() {
