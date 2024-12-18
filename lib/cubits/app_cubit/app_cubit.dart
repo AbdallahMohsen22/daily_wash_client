@@ -252,6 +252,58 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  // void getProviders({
+  //   int page = 1,
+  //   String? rate,
+  // }) {
+  //   emit(GetProvidersLoadingState());
+  //   DioHelper.getData(
+  //     url: EndPoints.getProviders,
+  //     query: {
+  //       "page": page,
+  //       // "limit": 200,
+  //       if (searchController.text.isNotEmpty) "name": searchController.text,
+  //       // if (rate != null) "rate": 'highest',
+  //       if (position != null) "current_latitude": position?.latitude,
+  //       if (position != null) "current_longitude": position?.longitude,
+  //       // if (position == null) "current_latitude": '3.07796442',
+  //       // if (position == null) "current_longitude": '101.5865449',
+  //     },
+  //     token: 'Bearer $token',
+  //   ).then((value) {
+  //     print(value.data);
+  //     if (value.data['status'] == true && value.data['data'] != null) {
+  //       if (value.statusCode == 200) {
+  //         print("Api status message====>>>>${value.statusMessage}");
+  //         print("Api status code========>>>>${value.data}");
+  //         print("Api Get Providers========>>>>>>>>>>${providersModel!.data}");
+  //         print("Api Get Providers========>>>>>>>>>>${providersModel!.status}");
+  //         print("Api Get Providers========>>>>>>>>>>${providersModel!.message}");
+  //         providersModel = ProvidersModel.fromJson(value.data);
+  //         takeFav(providersModel!.data!);
+  //         // if(page == 1) {
+  //         //
+  //         // }
+  //         // else{
+  //         //   providersModel!.currentPage = value.data['data']['currentPage'];
+  //         //   providersModel!.data!.pages = value.data['data']['pages'];
+  //         //   value.data['data']['data'].forEach((e){
+  //         //     providersModel!.data!.data!.add(ProviderData.fromJson(e));
+  //         //   });
+  //         //   takeFav(providersModel!.data!.data!);
+  //         // }
+  //         emit(GetProvidersSuccessState());
+  //       }
+  //     } else {
+  //       // emit(GetProvidersWrongState());
+  //       print("Error 400== >>");
+  //       emit(GetProvidersErrorState());
+  //     }
+  //   }).catchError((e) {
+  //     print("Error parsing data: ${e.toString()}");
+  //     emit(GetProvidersErrorState());
+  //   });
+  // }
   void getProviders({
     int page = 1,
     String? rate,
@@ -261,24 +313,19 @@ class AppCubit extends Cubit<AppStates> {
       url: EndPoints.getProviders,
       query: {
         "page": page,
-        // "limit": 200,
+        "limit": 200,
         if (searchController.text.isNotEmpty) "name": searchController.text,
-        // if (rate != null) "rate": 'highest',
+        if (rate != null) "rate": 'highest',
         if (position != null) "current_latitude": position?.latitude,
         if (position != null) "current_longitude": position?.longitude,
-        // if (position == null) "current_latitude": '3.07796442',
-        // if (position == null) "current_longitude": '101.5865449',
+        // if (position == null) "current_latitude": '25.3672045',
+        // if (position == null) "current_longitude": '55.5776818',
       },
       token: 'Bearer $token',
     ).then((value) {
       print(value.data);
       if (value.data['status'] == true && value.data['data'] != null) {
         if (value.statusCode == 200) {
-          print("Api status message====>>>>${value.statusMessage}");
-          print("Api status code========>>>>${value.data}");
-          print("Api Get Providers========>>>>>>>>>>${providersModel!.data}");
-          print("Api Get Providers========>>>>>>>>>>${providersModel!.status}");
-          print("Api Get Providers========>>>>>>>>>>${providersModel!.message}");
           providersModel = ProvidersModel.fromJson(value.data);
           takeFav(providersModel!.data!);
           // if(page == 1) {
@@ -296,15 +343,15 @@ class AppCubit extends Cubit<AppStates> {
         }
       } else {
         // emit(GetProvidersWrongState());
-        print("Error 400== >>");
         emit(GetProvidersErrorState());
       }
-    }).catchError((e) {
+    }).catchError((e,stackTrace) {
       print("Error parsing data: ${e.toString()}");
+          print("Stack trace: $stackTrace");
+      print(e.toString());
       emit(GetProvidersErrorState());
     });
   }
-
   // void getProviders({
   //   int page = 1,
   //   String? rate,
