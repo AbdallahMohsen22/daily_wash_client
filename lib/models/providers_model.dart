@@ -1,6 +1,6 @@
 class ProvidersModel {
   String? message;
-  int? status;
+  bool? status;
   List<ProviderData>? data;
 
   ProvidersModel({this.message, this.status, this.data});
@@ -15,7 +15,7 @@ class ProvidersModel {
       });
     }
   }
-
+// From ابو  شيماء لابو عبير
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
@@ -110,11 +110,15 @@ class ProviderData {
   int? status;
   String? address;
   bool? isFavorited;
+  String?distance;
+  int? distance_value;
   List<Reviews>? reviews;
+
   List<dynamic>? rates;
+
   String? createdAt;
-  String? distance;
   List<PricingItem>? pricingItems;
+
   bool? isDelivery;
 
   ProviderData({
@@ -155,19 +159,22 @@ class ProviderData {
     totalRate = _parseInt(json['total_rate']);
     totalRateNumber = _parseInt(json['total_rate_number']);
     totalRateCount = _parseInt(json['total_rate_count']);
+    distance_value=_parseInt(json['distance_value']);
+    distance=json['distance'];
     status = json['status'];
     address = json['address'];
     isFavorited = json['is_favorited'];
     isDelivery = json['is_delivery'];
     createdAt = json['created_at'];
     if (json['reviews'] != null) {
-      reviews = (json['reviews'] as List)
-          .map((v) => Reviews.fromJson(v))
-          .toList();
+      reviews =
+          (json['reviews'] as List).map((v) => Reviews.fromJson(v)).toList();
     }
     rates = json['rates'];
     if (json['pricingItems'] != null) {
-      pricingItems = List.from(json['pricingItems']?.map((item) => PricingItem.fromJson(item)) ?? []);
+      pricingItems = List.from(
+          json['pricingItems']?.map((item) => PricingItem.fromJson(item)) ??
+              []);
     }
   }
 
@@ -188,6 +195,8 @@ class ProviderData {
     data['total_rate_count'] = totalRateCount;
     data['status'] = status;
     data['address'] = address;
+    data['distance_value']=distance_value;
+    data['distance']=distance;
     data['is_favorited'] = isFavorited;
     data['is_delivery'] = isDelivery;
     data['created_at'] = createdAt;
@@ -196,8 +205,7 @@ class ProviderData {
     }
     data['rates'] = rates;
     if (pricingItems != null) {
-      data['pricingItems'] =
-          pricingItems!.map((v) => v.toJson()).toList();
+      data['pricingItems'] = pricingItems!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -219,7 +227,7 @@ class Reviews {
   int? rate;
   String? content;
 
-  Reviews({this.id, this.rate, this.content,this.username});
+  Reviews({this.id, this.rate, this.content, this.username});
 
   Reviews.fromJson(Map<String, dynamic> json) {
     id = json['id'];

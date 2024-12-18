@@ -22,12 +22,13 @@ class LaundromatItem extends StatelessWidget {
   LaundromatItem({super.key,this.provider});
 
   ProviderData? provider;
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(
   listener: (context, state) {},
   builder: (context, state) {
+    provider?.distance='500km';
+
     return GestureDetector(
       onTap: () {
         AppCubit.get(context).orderLatLng = null;
@@ -68,35 +69,35 @@ class LaundromatItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Text(
-                          provider?.name??'no_name'.tr(),
-                          style: FontManager.getMediumStyle(
-                            fontSize: AppSize.sp18,
-                            color: ColorResources.black,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      if(token!=null)
-                      ConditionalBuilder(
-                        condition: AppCubit.get(context).favLoadingId != provider?.id,
-                        fallback: (c)=>CupertinoActivityIndicator(),
-                        builder: (c)=> InkWell(
-                          onTap: (){
-                            AppCubit.get(context).changeFav(context, provider?.id??'');
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: CustomAssetImage(
-                              imageUrl: AppCubit.get(context).favorites[provider?.id]??false ?ImageResources.favourite:ImageResources.favourites,
-                              height: AppSize.h18,
-                              width: AppSize.w18,
-                            ),
-                          ),
-                        ),
-                      )
+                      // Expanded(
+                      //   child: Text(
+                      //     provider?.name??'no_name'.tr(),
+                      //     style: FontManager.getMediumStyle(
+                      //       fontSize: AppSize.sp18,
+                      //       color: ColorResources.black,
+                      //     ),
+                      //     maxLines: 2,
+                      //     overflow: TextOverflow.ellipsis,
+                      //   ),
+                      // ),
+                      // if(token!=null)
+                      // ConditionalBuilder(
+                      //   condition: AppCubit.get(context).favLoadingId != provider?.id,
+                      //   fallback: (c)=>CupertinoActivityIndicator(),
+                      //   builder: (c)=> InkWell(
+                      //     onTap: (){
+                      //       AppCubit.get(context).changeFav(context, provider?.id??'');
+                      //     },
+                      //     child: ClipRRect(
+                      //       borderRadius: BorderRadius.circular(10),
+                      //       child: CustomAssetImage(
+                      //         imageUrl: AppCubit.get(context).favorites[provider?.id]??false ?ImageResources.favourite:ImageResources.favourites,
+                      //         height: AppSize.h18,
+                      //         width: AppSize.w18,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                   Row(
