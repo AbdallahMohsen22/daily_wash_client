@@ -11,9 +11,10 @@ import '../../../cubits/app_cubit/app_cubit.dart';
 import '../../../cubits/app_cubit/app_states.dart';
 
 class TotalOrderWidget extends StatefulWidget {
-  TotalOrderWidget({super.key,this.deliveryFee});
+  TotalOrderWidget({super.key,this.deliveryFee,  this.laundryFee});
 
   int? deliveryFee;
+  int? laundryFee;
 
 
   @override
@@ -29,11 +30,11 @@ class _TotalOrderWidgetState extends State<TotalOrderWidget> {
   listener: (context, state) {},
   builder: (context, state) {
     var cubit = AppCubit.get(context);
-    final String total = "${cubit.couponModel!=null
+    final String total = "${cubit.couponModel != null
         ?cubit.couponModel!.data!.discountType==1
-        ?widget.deliveryFee! - (widget.deliveryFee!/cubit.couponModel!.data!.discountValue!)
-        :widget.deliveryFee! - cubit.couponModel!.data!.discountValue!
-        :widget.deliveryFee} AED";
+        ?widget.deliveryFee! - (widget.deliveryFee!/cubit.couponModel!.data!.discountValue!) + widget.laundryFee!
+        :widget.deliveryFee! - cubit.couponModel!.data!.discountValue! + widget.laundryFee!
+        :widget.deliveryFee! + widget.laundryFee!} AED";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -46,7 +47,25 @@ class _TotalOrderWidgetState extends State<TotalOrderWidget> {
         const Gap(10),
         AmountItem(
           title: "delivery_fee".tr(),
-          value: "${widget.deliveryFee??0} AED",
+          value: "${widget.deliveryFee ??0 } AED",
+          isTotal: false,
+        ),
+        const Gap(10),
+        AmountItem(
+          title: "transaction_fee".tr(),
+          value: "${0} %",
+          isTotal: false,
+        ),
+        const Gap(10),
+        AmountItem(
+          title: "laundry_fee".tr(),
+          value: "${widget.laundryFee??0} AED",
+          isTotal: false,
+        ),
+        const Gap(10),
+        AmountItem(
+          title: "tax".tr(),
+          value: "${0} AED",
           isTotal: false,
         ),
         const Gap(10),

@@ -12,6 +12,7 @@ import 'package:on_express/core/utils/image_resources.dart';
 import 'package:on_express/core/widget/custom_asset_image.dart';
 import 'package:on_express/core/widget/image_net.dart';
 import 'package:on_express/core/widget/ui.dart';
+import 'package:on_express/features/home/widget/subscription_users.dart';
 import 'package:on_express/features/store_details/store_details_page.dart';
 import 'package:on_express/models/providers_model.dart';
 import '../../../core/constants/app_constants.dart';
@@ -60,6 +61,7 @@ class LaundromatItem extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
+
             const Gap(10),
             Expanded(
               child: Column(
@@ -69,35 +71,35 @@ class LaundromatItem extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Expanded(
-                      //   child: Text(
-                      //     provider?.name??'no_name'.tr(),
-                      //     style: FontManager.getMediumStyle(
-                      //       fontSize: AppSize.sp18,
-                      //       color: ColorResources.black,
-                      //     ),
-                      //     maxLines: 2,
-                      //     overflow: TextOverflow.ellipsis,
-                      //   ),
-                      // ),
-                      // if(token!=null)
-                      // ConditionalBuilder(
-                      //   condition: AppCubit.get(context).favLoadingId != provider?.id,
-                      //   fallback: (c)=>CupertinoActivityIndicator(),
-                      //   builder: (c)=> InkWell(
-                      //     onTap: (){
-                      //       AppCubit.get(context).changeFav(context, provider?.id??'');
-                      //     },
-                      //     child: ClipRRect(
-                      //       borderRadius: BorderRadius.circular(10),
-                      //       child: CustomAssetImage(
-                      //         imageUrl: AppCubit.get(context).favorites[provider?.id]??false ?ImageResources.favourite:ImageResources.favourites,
-                      //         height: AppSize.h18,
-                      //         width: AppSize.w18,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // )
+                      Expanded(
+                        child: Text(
+                          provider?.name??'no_name'.tr(),
+                          style: FontManager.getMediumStyle(
+                            fontSize: AppSize.sp18,
+                            color: ColorResources.black,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if(token!=null)
+                      ConditionalBuilder(
+                        condition: AppCubit.get(context).favLoadingId != provider?.id,
+                        fallback: (c)=>CupertinoActivityIndicator(),
+                        builder: (c)=> InkWell(
+                          onTap: (){
+                            AppCubit.get(context).changeFav(context, provider?.id??'');
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CustomAssetImage(
+                              imageUrl: AppCubit.get(context).favorites[provider?.id]??false ?ImageResources.favourite:ImageResources.favourites,
+                              height: AppSize.h18,
+                              width: AppSize.w18,
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                   Row(
@@ -134,7 +136,7 @@ class LaundromatItem extends StatelessWidget {
                         ),
                       ),
                       const Gap(15),
-                      //const Expanded(child: SubscriptionUsers())
+                      const Expanded(child: SubscriptionUsers()),
                     ],
                   ),
                 ],
