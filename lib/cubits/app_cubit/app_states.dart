@@ -20,6 +20,16 @@ class GetProvidersSuccessState extends AppStates{}
 class GetProvidersWrongState extends AppStates{}
 class GetProvidersErrorState extends AppStates{}
 
+class GetCarsLoadingState extends AppStates{}
+class GetCarsSuccessState extends AppStates{}
+class GetCarsWrongState extends AppStates{}
+class GetCarsErrorState extends AppStates{}
+
+class GetHousesLoadingState extends AppStates{}
+class GetHousesSuccessState extends AppStates{}
+class GetHousesWrongState extends AppStates{}
+class GetHousesErrorState extends AppStates{}
+
 
 class GetCouponLoadingState extends AppStates{}
 class GetCouponSuccessState extends AppStates{}

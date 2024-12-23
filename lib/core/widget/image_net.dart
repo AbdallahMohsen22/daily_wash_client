@@ -27,7 +27,7 @@ class ImageNet extends StatelessWidget {
         },
         height: height,width: width,
         fit: fit,
-        errorWidget: (context, url, error) => Image.asset(ImageResources.holder,fit:fit,width: width,height: height,),
+        errorWidget: (context, url, error) => Image.asset(ImageResources.logo,fit:fit,width: width,height: height,),
         progressIndicatorBuilder: (context, url, downloadProgress) =>
             Center(
               child: Stack(

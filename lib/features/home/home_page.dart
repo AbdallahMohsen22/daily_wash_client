@@ -1,9 +1,11 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:on_express/core/extensions/media_values.dart';
+import 'package:on_express/core/utils/image_resources.dart';
 import 'package:on_express/core/widget/base_app_bar.dart';
 import 'package:on_express/core/widget/default_scaffold.dart';
 import 'package:on_express/core/widget/shimmer.dart';
@@ -30,6 +32,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     AppCubit.get(context).getCurrentLocation(context);
     AppCubit.get(context).getProviders();
+    AppCubit.get(context).getCars();
+    AppCubit.get(context).getHouses();
   }
 
   @override
@@ -53,6 +57,15 @@ class _HomePageState extends State<HomePage> {
                     AdsWidget(homeViewModel: homeViewModel),
                     const Gap(15),
                     //PickServiceType(homeViewModel: homeViewModel)
+                  ],
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Row(
+                  children: [
+                    Expanded(child: Image.asset(ImageResources.houseClean)),
+                    Expanded(child: Image.asset(ImageResources.carClean)),
+                    Expanded(child: Image.asset(ImageResources.laundryClean)),
                   ],
                 ),
               ),
@@ -80,10 +93,8 @@ class _HomePageState extends State<HomePage> {
                        return   SliverList(
                             delegate: SliverChildBuilderDelegate(
                                 (context, index) => LaundromatItem(
-                                    provider: cubit
-                                        .providersModel!.data![index]),
-                                childCount:
-                                    cubit.providersModel!.data!.length),
+                                    provider: cubit.providersModel!.data![index]),
+                                childCount: cubit.providersModel!.data!.length),
                           );
                         }),
               ),

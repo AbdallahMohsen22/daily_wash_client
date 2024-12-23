@@ -22,6 +22,7 @@ import 'package:on_express/features/store_details/widget/pick_delivery_service.d
 import 'package:on_express/features/store_details/widget/store_image.dart';
 import 'package:on_express/models/providers_model.dart';
 
+import '../../core/utils/image_resources.dart';
 import '../../cubits/app_cubit/app_cubit.dart';
 import '../../cubits/app_cubit/app_states.dart';
 import '../../cubits/menu_cubit/menu_cubit.dart';
@@ -33,14 +34,40 @@ import '../payment/presentation/manager/cuibt/payment_state.dart';
 import '../payment/presentation/views/widgets/custom_botton_bloc_consumer.dart';
 
 // ignore: must_be_immutable
-class StoreDetailsPage extends StatelessWidget {
+class StoreDetailsPage extends StatefulWidget {
   StoreDetailsPage({super.key, this.provider});
 
   ProviderData? provider;
 
+  @override
+  State<StoreDetailsPage> createState() => _StoreDetailsPageState();
+}
+
+class _StoreDetailsPageState extends State<StoreDetailsPage> {
   StoreDetailsViewModel storeDetailsViewModel = StoreDetailsViewModel();
 
   CouponAndNotes couponAndNotes = CouponAndNotes();
+
+  final Map<int, int> _itemCounts = {}; // Tracks number of pieces entered
+  double _totalCost = 0.0; // Tracks total cost
+
+  void _updateItemCount(int index, int count, int price) {
+    setState(() {
+      _itemCounts[index] = count;
+      _calculateTotalCost(price: price, index: index, count: count);
+    });
+  }
+
+  void _calculateTotalCost({required int price, required int index, required int count}) {
+    double sum = 0.0;
+    _itemCounts.forEach((key, value) {
+      final pricingItem = widget.provider?.pricingItems?[key];
+      if (pricingItem != null) {
+        sum += value * (pricingItem.price ?? 0);
+      }
+    });
+    _totalCost = sum;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +79,7 @@ class StoreDetailsPage extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = AppCubit.get(context);
-        var total=storeDetailsViewModel.selectedServiceType == 0
+        var deliveryFee=storeDetailsViewModel.selectedServiceType == 0
             ?storeDetailsViewModel.selectedDelivery == 0
             ?MenuCubit.get(context).settingsModel?.data?.shippingChargers?.deliveryBig
             :MenuCubit.get(context).settingsModel?.data?.shippingChargers?.deliverySmall
@@ -73,7 +100,7 @@ class StoreDetailsPage extends StatelessWidget {
                 children: [
 
 
-                  StoreImage(provider: provider),
+                  StoreImage(provider: widget.provider),
                   const Gap(30),
                   PickStoreServiceType(
                     storeDetailsViewModel: storeDetailsViewModel,
@@ -83,7 +110,49 @@ class StoreDetailsPage extends StatelessWidget {
                     storeDetailsViewModel: storeDetailsViewModel,
                   ),
                   const Gap(10),
-                  ClothesCounterWidget(),
+                  // ClothesCounterWidget(provider: provider),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        // First Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildClothingItem(0, ImageResources.pants),
+                            _buildClothingItem(1, ImageResources.shorts),
+                            _buildClothingItem(2, ImageResources.shirt1),
+                            _buildClothingItem(3, ImageResources.shoes),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        // Second Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildClothingItem(4, ImageResources.jacket),
+                            _buildClothingItem(5, ImageResources.blueDress),
+                            _buildClothingItem(6, ImageResources.bra),
+                            _buildClothingItem(7, ImageResources.shirt2),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        // Total Cost Display
+                        Row(
+                          children: [
+                            Text(
+                              "laundry_fee".tr(),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              ": ${_totalCost.toStringAsFixed(2)} AED",
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   const Gap(30),
                   DateAndTimeWidget(
                     storeDetailsViewModel: storeDetailsViewModel,
@@ -106,7 +175,9 @@ class StoreDetailsPage extends StatelessWidget {
                     fallback: (c)=>Center(child: CupertinoActivityIndicator(),),
                     builder: (c)=>
                         TotalOrderWidget(
-                      deliveryFee: total,
+                          deliveryFee: deliveryFee,
+                          laundryFee: _totalCost.toInt(),
+                            provider: widget.provider
                     ),
 
                   ),
@@ -121,6 +192,7 @@ class StoreDetailsPage extends StatelessWidget {
                       builder: (context)=> CustomButton(
                         title: "Submit_request".tr(),
                         onTap: () {
+                          final double transactionFees = (_totalCost ) * ((widget.provider?.transaction_fees ?? 0) / 100);
                           if (token != null) {
                             if (MenuCubit.get(context).userModel?.data?.phoneNumber?.isNotEmpty ?? false) {
                               if (MenuCubit.get(context).userModel?.data?.status == 2) {
@@ -142,11 +214,11 @@ class StoreDetailsPage extends StatelessWidget {
                                                   storeDetailsViewModel.addRequest(
                                                     context: context,
                                                     storeDetailsViewModel: storeDetailsViewModel,
-                                                    providerId: provider?.id ?? '',
+                                                    providerId: widget.provider?.id ?? '',
                                                     couponCode: cubit.couponModel != null ? couponAndNotes.couponController.text : null,
                                                     additionalNotes: couponAndNotes.notesController.text.isNotEmpty ? couponAndNotes.notesController.text : null,
                                                   );
-                                                  print("Total====>>>>");
+                                                  print("Total====>>>>${deliveryFee! + _totalCost.toInt() + transactionFees.toInt() + widget.provider!.taxes!}");
                                                 }
                                                 if (state is PaymentFailure) {
                                                   Navigator.pop(context);
@@ -155,7 +227,7 @@ class StoreDetailsPage extends StatelessWidget {
                                                 }
                                               },
                                               builder: (context, state){
-                                                return CustomButtonBlocConsumer(total: total,);
+                                                return CustomButtonBlocConsumer(total: deliveryFee! + _totalCost.toInt() + transactionFees.toInt() + widget.provider!.taxes!.toInt(),);
                                               },
 
                                               )
@@ -167,7 +239,7 @@ class StoreDetailsPage extends StatelessWidget {
                                   storeDetailsViewModel.addRequest(
                                     context: context,
                                     storeDetailsViewModel: storeDetailsViewModel,
-                                    providerId: provider?.id ?? '',
+                                    providerId: widget.provider?.id ?? '',
                                     couponCode: cubit.couponModel != null ? couponAndNotes.couponController.text : null,
                                     additionalNotes: couponAndNotes.notesController.text.isNotEmpty ? couponAndNotes.notesController.text : null,
                                   );
@@ -203,6 +275,57 @@ class StoreDetailsPage extends StatelessWidget {
     );
   },
 );
+  }
+
+  Widget _buildClothingItem(int index, String imagePath) {
+    // Check if the index is valid
+    if (widget.provider?.pricingItems != null && index < widget.provider!.pricingItems!.length) {
+      final price = widget.provider!.pricingItems![index].price ?? 0;
+      return _clothingItem(imagePath, _textField(index, price));
+    } else {
+      // If the index is invalid, display a placeholder or empty widget
+      return _clothingItem(imagePath, _textField(index, 0, isPlaceholder: true));
+    }
+  }
+
+  Widget _clothingItem(String imagePath, Widget textField) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Image.asset(
+              imagePath,
+              width: 30,
+              height: 30,
+              fit: BoxFit.contain,
+            ),
+            SizedBox(width: 8), // Space between image and text field
+            textField,
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _textField(int index, int price, {bool isPlaceholder = false}) {
+    return SizedBox(
+      width: 30,
+      height: 30,
+      child: TextField(
+        decoration: InputDecoration(
+          hintStyle: TextStyle(color: Colors.grey.withOpacity(.3)),
+          hintText: isPlaceholder ? "X" : "0",
+          border: OutlineInputBorder(),
+          contentPadding: EdgeInsets.symmetric(horizontal: 8),
+        ),
+        keyboardType: TextInputType.number,
+        enabled: !isPlaceholder, // Disable input for placeholder
+        onChanged: (value) {
+          final count = int.tryParse(value) ?? 0;
+          _updateItemCount(index, count, price);
+        },
+      ),
+    );
   }
 }
 //051900004

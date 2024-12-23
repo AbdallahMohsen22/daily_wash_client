@@ -1,6 +1,6 @@
 
 import 'package:on_express/core/constants/app_constants.dart';
-//baseUrl: 'http://162.240.235.136:5555/',
+//baseUrl: 'https://daily-wash.com/',
 class EndPoints{
   static const String loginUser = 'user/logout';
   static const String createUser = 'user/create-user';
@@ -21,6 +21,8 @@ class EndPoints{
   static const String getCoupon = 'coupouns/apply-coupoun';
   static const String createOrder = 'orders/create-order';
   static const String getProviders = 'provider/all-near-by-providers';
+  static const String getCars = 'provider/all-provider-by-service/car';
+  static const String getHouse = 'provider/all-provider-by-service/house';
   static const String getOrders = 'orders/all-orders-with-status';
   static const String deleteOrder = 'orders/delete-order/';
   static const String changeFav = 'user/add-remove-provider-from-favorite';
