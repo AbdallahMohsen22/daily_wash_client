@@ -1,17 +1,17 @@
-class ProvidersModel {
+class HousesModel {
   String? message;
   bool? status;
-  List<ProviderData>? data;
+  List<HouseData>? data;
 
-  ProvidersModel({this.message, this.status, this.data});
+  HousesModel({this.message, this.status, this.data});
 
-  ProvidersModel.fromJson(Map<String, dynamic> json) {
+  HousesModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
     if (json['data'] != null) {
-      data = <ProviderData>[];
+      data = <HouseData>[];
       json['data'].forEach((v) {
-        data!.add(ProviderData.fromJson(v));
+        data!.add(HouseData.fromJson(v));
       });
     }
   }
@@ -27,35 +27,35 @@ class ProvidersModel {
   }
 }
 
-class ProvidersPaginationModel {
-  String? message;
-  bool? status;
-  Data? data;
-
-  ProvidersPaginationModel({this.message, this.status, this.data});
-
-  ProvidersPaginationModel.fromJson(Map<String, dynamic> json) {
-    message = json['message'];
-    status = json['status'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['status'] = this.status;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
-}
+// class ProvidersPaginationModel {
+//   String? message;
+//   bool? status;
+//   Data? data;
+//
+//   ProvidersPaginationModel({this.message, this.status, this.data});
+//
+//   ProvidersPaginationModel.fromJson(Map<String, dynamic> json) {
+//     message = json['message'];
+//     status = json['status'];
+//     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['message'] = this.message;
+//     data['status'] = this.status;
+//     if (this.data != null) {
+//       data['data'] = this.data!.toJson();
+//     }
+//     return data;
+//   }
+// }
 
 class Data {
   int? currentPage;
   int? pages;
   int? count;
-  List<ProviderData>? data;
+  List<HouseData>? data;
 
   Data({this.currentPage, this.pages, this.count, this.data});
 
@@ -64,9 +64,9 @@ class Data {
     pages = _parseInt(json['pages']);
     count = _parseInt(json['count']);
     if (json['data'] != null) {
-      data = <ProviderData>[];
+      data = <HouseData>[];
       json['data'].forEach((v) {
-        data!.add(ProviderData.fromJson(v));
+        data!.add(HouseData.fromJson(v));
       });
     }
   }
@@ -93,7 +93,7 @@ class Data {
   }
 }
 
-class ProviderData {
+class HouseData {
   String? id;
   int? itemNumber;
   String? name;
@@ -121,7 +121,7 @@ class ProviderData {
   num? delivery_fees;
   num? transaction_fees;
 
-  ProviderData({
+  HouseData({
     this.id,
     this.itemNumber,
     this.name,
@@ -148,7 +148,7 @@ class ProviderData {
     this.delivery_fees,
   });
 
-  ProviderData.fromJson(Map<String, dynamic> json) {
+  HouseData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     itemNumber = _parseInt(json['item_number']);
     name = json['name'];

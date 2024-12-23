@@ -177,6 +177,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                         TotalOrderWidget(
                           deliveryFee: deliveryFee,
                           laundryFee: _totalCost.toInt(),
+                            provider: widget.provider
                     ),
 
                   ),
@@ -191,6 +192,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                       builder: (context)=> CustomButton(
                         title: "Submit_request".tr(),
                         onTap: () {
+                          final double transactionFees = (_totalCost ) * ((widget.provider?.transaction_fees ?? 0) / 100);
                           if (token != null) {
                             if (MenuCubit.get(context).userModel?.data?.phoneNumber?.isNotEmpty ?? false) {
                               if (MenuCubit.get(context).userModel?.data?.status == 2) {
@@ -216,7 +218,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                                                     couponCode: cubit.couponModel != null ? couponAndNotes.couponController.text : null,
                                                     additionalNotes: couponAndNotes.notesController.text.isNotEmpty ? couponAndNotes.notesController.text : null,
                                                   );
-                                                  print("Total====>>>>");
+                                                  print("Total====>>>>${deliveryFee! + _totalCost.toInt() + transactionFees.toInt() + widget.provider!.taxes!}");
                                                 }
                                                 if (state is PaymentFailure) {
                                                   Navigator.pop(context);
@@ -225,7 +227,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                                                 }
                                               },
                                               builder: (context, state){
-                                                return CustomButtonBlocConsumer(total: deliveryFee!+_totalCost.toInt(),);
+                                                return CustomButtonBlocConsumer(total: deliveryFee! + _totalCost.toInt() + transactionFees.toInt() + widget.provider!.taxes!.toInt(),);
                                               },
 
                                               )

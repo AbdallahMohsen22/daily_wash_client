@@ -82,4 +82,7 @@ class ImageResources {
   static const String star5Yes = 'assets/images/star5yes.png';
   static const String noNotifications = 'assets/images/no_notifications.png';
   static const String background = 'assets/images/background.jpeg';
+  static const String carClean = 'assets/images/car_clean.png';
+  static const String houseClean = 'assets/images/house.png';
+  static const String laundryClean = 'assets/images/laundryClean.png';
 }

@@ -9,13 +9,14 @@ import 'package:on_express/core/widget/custom_divider.dart';
 
 import '../../../cubits/app_cubit/app_cubit.dart';
 import '../../../cubits/app_cubit/app_states.dart';
+import '../../../models/providers_model.dart';
 
 class TotalOrderWidget extends StatefulWidget {
-  TotalOrderWidget({super.key,this.deliveryFee,  this.laundryFee});
+  TotalOrderWidget({super.key,this.deliveryFee,  this.laundryFee, this.provider});
 
   int? deliveryFee;
   int? laundryFee;
-
+  ProviderData? provider;
 
   @override
   State<TotalOrderWidget> createState() => _TotalOrderWidgetState();
@@ -30,11 +31,12 @@ class _TotalOrderWidgetState extends State<TotalOrderWidget> {
   listener: (context, state) {},
   builder: (context, state) {
     var cubit = AppCubit.get(context);
+    final double transactionFees = (widget.laundryFee ?? 0) * ((widget.provider?.transaction_fees ?? 0) / 100);
     final String total = "${cubit.couponModel != null
         ?cubit.couponModel!.data!.discountType==1
-        ?widget.deliveryFee! - (widget.deliveryFee!/cubit.couponModel!.data!.discountValue!) + widget.laundryFee!
-        :widget.deliveryFee! - cubit.couponModel!.data!.discountValue! + widget.laundryFee!
-        :widget.deliveryFee! + widget.laundryFee!} AED";
+        ?widget.deliveryFee! - (widget.deliveryFee!/cubit.couponModel!.data!.discountValue!) + widget.laundryFee! + transactionFees + widget.provider!.taxes!
+        :widget.deliveryFee! - cubit.couponModel!.data!.discountValue! + widget.laundryFee! + transactionFees + widget.provider!.taxes!
+        :widget.deliveryFee! + widget.laundryFee! + transactionFees + widget.provider!.taxes!} AED";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,7 +55,7 @@ class _TotalOrderWidgetState extends State<TotalOrderWidget> {
         const Gap(10),
         AmountItem(
           title: "transaction_fee".tr(),
-          value: "${0} %",
+          value: "${widget.provider?.transaction_fees ??0} %",
           isTotal: false,
         ),
         const Gap(10),
@@ -65,7 +67,7 @@ class _TotalOrderWidgetState extends State<TotalOrderWidget> {
         const Gap(10),
         AmountItem(
           title: "tax".tr(),
-          value: "${0} AED",
+          value: "${widget.provider?.taxes ??0}  AED",
           isTotal: false,
         ),
         const Gap(10),
