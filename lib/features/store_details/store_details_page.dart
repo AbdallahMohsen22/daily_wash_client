@@ -54,14 +54,14 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
   void _updateItemCount(int index, int count, int price) {
     setState(() {
       _itemCounts[index] = count;
-      _calculateTotalCost(price: price, index: index, count: count);
+      _calculateTotalCost();
     });
   }
 
-  void _calculateTotalCost({required int price, required int index, required int count}) {
+  void _calculateTotalCost() {
     double sum = 0.0;
     _itemCounts.forEach((key, value) {
-      final pricingItem = widget.provider?.pricingItems?[key];
+      final pricingItem = widget.provider?.serviceDetails?.services?['Clothes']?[key];
       if (pricingItem != null) {
         sum += value * (pricingItem.price ?? 0);
       }
@@ -119,10 +119,10 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildClothingItem(0, ImageResources.pants),
-                            _buildClothingItem(1, ImageResources.shorts),
-                            _buildClothingItem(2, ImageResources.shirt1),
-                            _buildClothingItem(3, ImageResources.shoes),
+                            _buildClothingItem(0),
+                            _buildClothingItem(1),
+                            _buildClothingItem(2),
+                            _buildClothingItem(3),
                           ],
                         ),
                         SizedBox(height: 20),
@@ -130,10 +130,10 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            _buildClothingItem(4, ImageResources.jacket),
-                            _buildClothingItem(5, ImageResources.blueDress),
-                            _buildClothingItem(6, ImageResources.bra),
-                            _buildClothingItem(7, ImageResources.shirt2),
+                            _buildClothingItem(4),
+                            _buildClothingItem(5),
+                            _buildClothingItem(6),
+                            _buildClothingItem(7),
                           ],
                         ),
                         SizedBox(height: 20),
@@ -192,7 +192,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                       builder: (context)=> CustomButton(
                         title: "Submit_request".tr(),
                         onTap: () {
-                          final double transactionFees = (_totalCost ) * ((widget.provider?.transaction_fees ?? 0) / 100);
+                          final double transactionFees = (_totalCost ) * ((widget.provider?.transactionFees ?? 0) / 100);
                           if (token != null) {
                             if (MenuCubit.get(context).userModel?.data?.phoneNumber?.isNotEmpty ?? false) {
                               if (MenuCubit.get(context).userModel?.data?.status == 2) {
@@ -277,14 +277,44 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
 );
   }
 
-  Widget _buildClothingItem(int index, String imagePath) {
-    // Check if the index is valid
-    if (widget.provider?.pricingItems != null && index < widget.provider!.pricingItems!.length) {
-      final price = widget.provider!.pricingItems![index].price ?? 0;
-      return _clothingItem(imagePath, _textField(index, price));
+  Widget _buildClothingItem(int index) {
+    if (widget.provider?.serviceDetails?.services != null && index < (widget.provider!.serviceDetails?.services?['Clothes']?.length ?? 0)) {
+      final item = widget.provider!.serviceDetails?.services?['Clothes']?[index];
+      final price = item?.price ?? 0;
+      final iconPath = item?.icon ?? ''; // Assuming 'icon' holds the image path
+      final name = item?.name ?? 'Item';
+
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Icon
+          Image.network(
+            iconPath,
+            width: 40,
+            height: 40,
+            fit: BoxFit.contain,
+          ),
+          SizedBox(height: 8),
+          // Name
+          Text(
+            name,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 4),
+          // Price
+          Text(
+            "$price AED",
+            style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+          ),
+          SizedBox(height: 4),
+          // Counter
+          _textField(index, price),
+        ],
+      );
     } else {
-      // If the index is invalid, display a placeholder or empty widget
-      return _clothingItem(imagePath, _textField(index, 0, isPlaceholder: true));
+      // Placeholder if item not available
+      return SizedBox.shrink();
     }
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:on_express/core/utils/image_resources.dart';
 
 import '../../../models/providers_model.dart';
 
@@ -19,14 +18,14 @@ class _ClothesCounterWidgetState extends State<ClothesCounterWidget> {
   void _updateItemCount(int index, int count, int price) {
     setState(() {
       _itemCounts[index] = count;
-      _calculateTotalCost(price: price, index: index, count: count);
+      _calculateTotalCost();
     });
   }
 
-  void _calculateTotalCost({required int price, required int index, required int count}) {
+  void _calculateTotalCost() {
     double sum = 0.0;
     _itemCounts.forEach((key, value) {
-      final pricingItem = widget.provider?.pricingItems?[key];
+      final pricingItem = widget.provider?.serviceDetails?.services?['Clothes']?[key];
       if (pricingItem != null) {
         sum += value * (pricingItem.price ?? 0);
       }
@@ -40,27 +39,22 @@ class _ClothesCounterWidgetState extends State<ClothesCounterWidget> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // First Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildClothingItem(0, ImageResources.pants),
-                _buildClothingItem(1, ImageResources.shorts),
-                _buildClothingItem(2, ImageResources.shirt1),
-                _buildClothingItem(3, ImageResources.shoes),
-              ],
-            ),
-            SizedBox(height: 20),
-            // Second Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildClothingItem(4, ImageResources.jacket),
-                _buildClothingItem(5, ImageResources.blueDress),
-                _buildClothingItem(6, ImageResources.bra),
-                _buildClothingItem(7, ImageResources.shirt2),
-              ],
+            // Services Details Grid
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4, // 4 items per row
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 16,
+                childAspectRatio: 0.8, // Adjust for better spacing
+              ),
+              itemCount: widget.provider?.serviceDetails?.services?['Clothes']?.length ?? 0,
+              itemBuilder: (context, index) {
+                return _buildClothingItem(index);
+              },
             ),
             SizedBox(height: 20),
             // Total Cost Display
@@ -74,49 +68,59 @@ class _ClothesCounterWidgetState extends State<ClothesCounterWidget> {
     );
   }
 
-  Widget _buildClothingItem(int index, String imagePath) {
-    // Check if the index is valid
-    if (widget.provider?.pricingItems != null && index < widget.provider!.pricingItems!.length) {
-      final price = widget.provider!.pricingItems![index].price ?? 0;
-      return _clothingItem(imagePath, _textField(index, price));
+  Widget _buildClothingItem(int index) {
+    if (widget.provider?.serviceDetails?.services != null && index < (widget.provider!.serviceDetails?.services?['Clothes']?.length ?? 0)) {
+      final item = widget.provider!.serviceDetails?.services?['Clothes']?[index];
+      final price = item?.price ?? 0;
+      final iconPath = item?.icon ?? ''; // Assuming 'icon' holds the image path
+      final name = item?.name ?? 'Item';
+
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Icon
+          Image.network(
+            iconPath,
+            width: 40,
+            height: 40,
+            fit: BoxFit.contain,
+          ),
+          SizedBox(height: 8),
+          // Name
+          Text(
+            name,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 4),
+          // Price
+          Text(
+            "$price AED",
+            style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+          ),
+          SizedBox(height: 4),
+          // Counter
+          _textField(index, price),
+        ],
+      );
     } else {
-      // If the index is invalid, display a placeholder or empty widget
-      return _clothingItem(imagePath, _textField(index, 0, isPlaceholder: true));
+      // Placeholder if item not available
+      return SizedBox.shrink();
     }
   }
 
-  Widget _clothingItem(String imagePath, Widget textField) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Image.asset(
-              imagePath,
-              width: 30,
-              height: 30,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(width: 8), // Space between image and text field
-            textField,
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _textField(int index, int price, {bool isPlaceholder = false}) {
+  Widget _textField(int index, int price) {
     return SizedBox(
-      width: 30,
-      height: 30,
+      width: 40,
+      height: 40,
       child: TextField(
         decoration: InputDecoration(
-          hintStyle: TextStyle(color: Colors.grey.withOpacity(.3)),
-          hintText: isPlaceholder ? "X" : "0",
+          hintStyle: TextStyle(color: Colors.grey.withOpacity(0.6)),
+          hintText: "0",
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(horizontal: 8),
         ),
         keyboardType: TextInputType.number,
-        enabled: !isPlaceholder, // Disable input for placeholder
         onChanged: (value) {
           final count = int.tryParse(value) ?? 0;
           _updateItemCount(index, count, price);

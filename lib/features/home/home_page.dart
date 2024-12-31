@@ -26,14 +26,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeViewModel homeViewModel = HomeViewModel();
+  String? selectedCategory; // Holds the currently selected category
 
   @override
   void initState() {
     super.initState();
     AppCubit.get(context).getCurrentLocation(context);
     AppCubit.get(context).getProviders();
-    AppCubit.get(context).getCars();
-    AppCubit.get(context).getHouses();
+    // AppCubit.get(context).getCars();
+    // AppCubit.get(context).getHouses();
   }
 
   @override
@@ -42,11 +43,22 @@ class _HomePageState extends State<HomePage> {
       listener: (context, state) {},
       builder: (context, state) {
         var cubit = AppCubit.get(context);
+
+        // Decide which data to display based on the selected category
+        List<dynamic>? displayedItems;
+        if (selectedCategory == 'laundry') {
+          displayedItems = cubit.providersModel?.data;
+        } else if (selectedCategory == 'car') {
+          displayedItems = cubit.carsModel?.data;
+        } else if (selectedCategory == 'house') {
+          displayedItems = cubit.housesModel?.data;
+        }
+
         return DefaultScaffold(
           haveBackground: true,
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
-            controller: cubit.providersModel!=null?cubit.providersScrollerController:null,
+            controller: displayedItems != null ? cubit.providersScrollerController : null,
             slivers: [
               BaseAppBar(
                 isBackExist: false,
@@ -56,55 +68,71 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     AdsWidget(homeViewModel: homeViewModel),
                     const Gap(15),
-                    //PickServiceType(homeViewModel: homeViewModel)
                   ],
                 ),
               ),
               SliverToBoxAdapter(
                 child: Row(
                   children: [
-                    Expanded(child: Image.asset(ImageResources.houseClean)),
-                    Expanded(child: Image.asset(ImageResources.carClean)),
-                    Expanded(child: Image.asset(ImageResources.laundryClean)),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = 'house';
+                          });
+                        },
+                        child: Image.asset(ImageResources.houseClean),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = 'car';
+                          });
+                        },
+                        child: Image.asset(ImageResources.carClean),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = 'laundry';
+                          });
+                        },
+                        child: Image.asset(ImageResources.laundryClean),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              ConditionalBuilder(
-                condition: cubit.providersModel!=null ,
-                fallback: (c)=>SliverToBoxAdapter(child: Padding(
-                    padding: EdgeInsets.only(top: 100),
-                    child: Center(child: Text(
-                      'no_laundries_yet'.tr(),  //providersModel == null
-                      style: TextStyle(fontWeight: FontWeight.w700,fontSize: 20),
-                    )))),
-                builder: (c)=> ConditionalBuilder(
-                  condition: cubit.providersModel!.data!.isNotEmpty,
-                  fallback: (c)=>SliverToBoxAdapter(child: Padding(
-                    padding: EdgeInsets.only(top: 100),
-                      child: Center(child: Text(
-                        'no_laundries_yet'.tr(),
-                        style: TextStyle(fontWeight: FontWeight.w700,fontSize: 20),
-                      )))),
-                  builder: (c)
-                  {
-                    // Future.delayed(Duration.zero,(){
-                    //   cubit.paginationProviders(context);
-                    // });
-                       return   SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                                (context, index) => LaundromatItem(
-                                    provider: cubit.providersModel!.data![index]),
-                                childCount: cubit.providersModel!.data!.length),
-                          );
-                        }),
-              ),
-              if(state is GetProvidersLoadingState)
+              if (displayedItems != null && displayedItems.isNotEmpty)
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                        (context, index) => LaundromatItem(provider: displayedItems![index]),
+                    childCount: displayedItems.length,
+                  ),
+                )
+              else if (displayedItems == null || displayedItems.isEmpty)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 100),
+                    child: Center(
+                      child: Text(
+                        'no_items_found'.tr(),
+                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                      ),
+                    ),
+                  ),
+                ),
+              if (state is GetProvidersLoadingState)
                 const SliverToBoxAdapter(
                   child: CupertinoActivityIndicator(),
                 ),
               const SliverToBoxAdapter(
                 child: Gap(70),
-              )
+              ),
             ],
           ),
         );
@@ -112,3 +140,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
