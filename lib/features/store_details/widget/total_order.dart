@@ -31,7 +31,7 @@ class _TotalOrderWidgetState extends State<TotalOrderWidget> {
   listener: (context, state) {},
   builder: (context, state) {
     var cubit = AppCubit.get(context);
-    final double transactionFees = (widget.laundryFee ?? 0) * ((widget.provider?.transaction_fees ?? 0) / 100);
+    final double transactionFees = (widget.laundryFee ?? 0) * ((widget.provider?.transactionFees ?? 0) / 100);
     final String total = "${cubit.couponModel != null
         ?cubit.couponModel!.data!.discountType==1
         ?widget.deliveryFee! - (widget.deliveryFee!/cubit.couponModel!.data!.discountValue!) + widget.laundryFee! + transactionFees + widget.provider!.taxes!
@@ -55,7 +55,7 @@ class _TotalOrderWidgetState extends State<TotalOrderWidget> {
         const Gap(10),
         AmountItem(
           title: "transaction_fee".tr(),
-          value: "${widget.provider?.transaction_fees ??0} %",
+          value: "${widget.provider?.transactionFees ??0} %",
           isTotal: false,
         ),
         const Gap(10),

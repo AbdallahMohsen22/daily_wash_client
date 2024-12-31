@@ -93,6 +93,7 @@ class Data {
   }
 }
 
+
 class ProviderData {
   String? id;
   int? itemNumber;
@@ -108,18 +109,17 @@ class ProviderData {
   int? totalRateNumber;
   int? totalRateCount;
   int? status;
+  String? distance;
   String? address;
   bool? isFavorited;
-  String?distance;
-  int? distance_value;
-  List<Reviews>? reviews;
+  List<dynamic>? reviews;
   List<dynamic>? rates;
   String? createdAt;
-  List<PricingItem>? pricingItems;
-  bool? isDelivery;
-  num? taxes;
-  num? delivery_fees;
-  num? transaction_fees;
+  ServiceDetails? serviceDetails;
+  int? rushFees;
+  int? transactionFees;
+  int? taxes;
+  int? numberOfEmp;
 
   ProviderData({
     this.id,
@@ -141,16 +141,16 @@ class ProviderData {
     this.reviews,
     this.rates,
     this.createdAt,
-    this.pricingItems,
-    this.isDelivery,
+    this.serviceDetails,
+    this.rushFees,
+    this.transactionFees,
     this.taxes,
-    this.transaction_fees,
-    this.delivery_fees,
+    this.numberOfEmp,
   });
 
   ProviderData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    itemNumber = _parseInt(json['item_number']);
+    itemNumber = json['item_number'];
     name = json['name'];
     currentLatitude = json['current_latitude'];
     currentLongitude = json['current_longitude'];
@@ -159,29 +159,22 @@ class ProviderData {
     phoneNumber = json['phone_number'];
     personalPhoto = json['personal_photo'];
     currentLanguage = json['current_language'];
-    totalRate = _parseInt(json['total_rate']);
-    totalRateNumber = _parseInt(json['total_rate_number']);
-    totalRateCount = _parseInt(json['total_rate_count']);
-    distance_value=_parseInt(json['distance_value']);
-    distance=json['distance'];
+    totalRate = json['total_rate'];
+    totalRateNumber = json['total_rate_number'];
+    totalRateCount = json['total_rate_count'];
     status = json['status'];
     address = json['address'];
     isFavorited = json['is_favorited'];
-    isDelivery = json['is_delivery'];
-    createdAt = json['created_at'];
-    if (json['reviews'] != null) {
-      reviews =
-          (json['reviews'] as List).map((v) => Reviews.fromJson(v)).toList();
-    }
+    reviews = json['reviews'];
     rates = json['rates'];
-    if (json['pricingItems'] != null) {
-      pricingItems = List.from(
-          json['pricingItems']?.map((item) => PricingItem.fromJson(item)) ??
-              []);
-    }
-    taxes = _parseInt(json['taxes']);
-    transaction_fees = _parseInt(json['transaction_fees']);
-    delivery_fees = _parseInt(json['delivery_fees']);
+    createdAt = json['created_at'];
+    serviceDetails = json['serviceDetails'] != null
+        ? ServiceDetails.fromJson(json['serviceDetails'])
+        : null;
+    rushFees = json['rush_fees'];
+    transactionFees = json['transaction_fees'];
+    taxes = json['taxes'];
+    numberOfEmp = json['numberOfEmp'];
   }
 
   Map<String, dynamic> toJson() {
@@ -201,69 +194,73 @@ class ProviderData {
     data['total_rate_count'] = totalRateCount;
     data['status'] = status;
     data['address'] = address;
-    data['distance_value']=distance_value;
-    data['distance']=distance;
     data['is_favorited'] = isFavorited;
-    data['is_delivery'] = isDelivery;
-    data['created_at'] = createdAt;
-    if (reviews != null) {
-      data['reviews'] = reviews!.map((v) => v.toJson()).toList();
-    }
+    data['reviews'] = reviews;
     data['rates'] = rates;
-    if (pricingItems != null) {
-      data['pricingItems'] = pricingItems!.map((v) => v.toJson()).toList();
+    data['created_at'] = createdAt;
+    if (serviceDetails != null) {
+      data['serviceDetails'] = serviceDetails!.toJson();
     }
+    data['rush_fees'] = rushFees;
+    data['transaction_fees'] = transactionFees;
     data['taxes'] = taxes;
-    data['delivery_fees'] = delivery_fees;
-    data['transaction_fees'] = transaction_fees;
+    data['numberOfEmp'] = numberOfEmp;
     return data;
-  }
-
-  // Safe parsing function for integers
-  int _parseInt(dynamic value) {
-    if (value is String) {
-      return int.tryParse(value) ?? 0;
-    } else if (value is int) {
-      return value;
-    }
-    return 0;
   }
 }
 
-class Reviews {
-  String? id;
-  String? username;
-  int? rate;
-  String? content;
+class ServiceDetails {
+  Map<String, List<ServiceItem>>? services;
+  bool? isDelivery;
+  int? deliveryFeesPerKilo;
+  int? withTools;
+  int? employeePrice;
 
-  Reviews({this.id, this.rate, this.content, this.username});
+  ServiceDetails({
+    this.services,
+    this.isDelivery,
+    this.deliveryFeesPerKilo,
+    this.withTools,
+    this.employeePrice,
+  });
 
-  Reviews.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    username = json['user_name'];
-    rate = json['rate'];
-    content = json['content'];
+  ServiceDetails.fromJson(Map<String, dynamic> json) {
+    services = {};
+    json.forEach((key, value) {
+      if (key == 'is_delivery' || key == 'delivery_fees_per_kilo' || key == 'with_tools' || key == 'employee_price') {
+        // Handle individual keys
+        if (key == 'is_delivery') isDelivery = value;
+        if (key == 'delivery_fees_per_kilo') deliveryFeesPerKilo = value;
+        if (key == 'with_tools') withTools = int.tryParse(value.toString());
+        if (key == 'employee_price') employeePrice = int.tryParse(value.toString());
+      } else if (value is List) {
+        services![key] = value.map((v) => ServiceItem.fromJson(v)).toList();
+      }
+    });
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['user_name'] = this.username;
-    data['rate'] = this.rate;
-    data['content'] = this.content;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    services?.forEach((key, value) {
+      data[key] = value.map((v) => v.toJson()).toList();
+    });
+    data['is_delivery'] = isDelivery.toString();
+    data['delivery_fees_per_kilo'] = deliveryFeesPerKilo;
+    data['with_tools'] = withTools;
+    data['employee_price'] = employeePrice;
     return data;
   }
 }
 
-class PricingItem {
+class ServiceItem {
   String? id;
   String? name;
   String? icon;
   int? price;
 
-  PricingItem({this.id, this.name, this.icon, this.price});
+  ServiceItem({this.id, this.name, this.icon, this.price});
 
-  PricingItem.fromJson(Map<String, dynamic> json) {
+  ServiceItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     icon = json['icon'];
