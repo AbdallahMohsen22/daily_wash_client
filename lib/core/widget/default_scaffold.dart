@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:on_express/core/extensions/media_values.dart';
 import 'package:on_express/core/utils/app_size.dart';
 import 'package:on_express/core/utils/color_resources.dart';
 
@@ -16,7 +17,8 @@ class DefaultScaffold extends StatelessWidget {
     this.havePadding = true,
     this.bottomSheet,
     this.bottomNavigationBar,
-    this.haveBackground = false
+    this.haveBackground = false,
+    this.backGround,
   });
 
   Widget child;
@@ -28,6 +30,7 @@ class DefaultScaffold extends StatelessWidget {
   bool haveNotification;
   bool havePadding;
   bool haveBackground;
+  String? backGround;
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +48,25 @@ class DefaultScaffold extends StatelessWidget {
             color: ColorResources.primaryColor,
           ),
           if(haveBackground)
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius:
-                  BorderRadiusDirectional.only(topEnd: Radius.circular(148)),
-                  image: DecorationImage(
-                      image: AssetImage(ImageResources.background),
-                      fit: BoxFit.cover
-                  )
-              ),
+            Stack(
+              children: [
+
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius:
+                      BorderRadiusDirectional.only(topEnd: Radius.circular(148)),
+                      image: DecorationImage(
+                          image:AssetImage(backGround!= null?backGround!:ImageResources.background),
+                          fit: BoxFit.cover
+                      )
+                  ),
+                ),
+                // backGround !=null?Container(
+                //   height: context.height,
+                //   width: context.width,
+                //   color: Colors.white.withOpacity(.1),
+                // ):Container(),
+              ],
             ),
           if(!haveBackground)
             Container(
@@ -63,6 +76,7 @@ class DefaultScaffold extends StatelessWidget {
                   BorderRadiusDirectional.only(topEnd: Radius.circular(148)),
             ),
           ),
+          
           SafeArea(
               bottom: false,
               child: Padding(

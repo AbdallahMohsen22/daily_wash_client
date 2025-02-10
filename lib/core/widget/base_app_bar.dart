@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:on_express/config/routes/app_route.dart';
 import 'package:on_express/core/constants/app_constants.dart';
@@ -12,21 +13,26 @@ import 'package:on_express/core/utils/image_resources.dart';
 import 'package:on_express/core/widget/custom_asset_image.dart';
 import 'package:provider/provider.dart';
 
+import '../../features/store_details/store_details_page.dart';
+
 // ignore: must_be_immutable
 class BaseAppBar extends StatelessWidget {
   BaseAppBar(
       {super.key,
-      required this.isBackExist,
+      required this.isBackExist ,
       this.title,
       this.notification,
       this.backPressed,
-      this.haveLogo = true});
+      this.haveLogo = true,
+      this.havePadding=false
+      });
 
   final bool isBackExist;
   bool haveLogo;
   Widget? title;
   Widget? notification;
   VoidCallback? backPressed;
+  bool? havePadding;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,7 @@ class BaseAppBar extends StatelessWidget {
                       AppRoutes.notificationPage,
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
+                      padding:havePadding! ?EdgeInsets.symmetric(horizontal: 16.w): const EdgeInsets.only(bottom: 10.0),
                       child: CustomAssetImage(
                         imageUrl: ImageResources.notification,
                         height: AppSize.h22,
@@ -60,23 +66,33 @@ class BaseAppBar extends StatelessWidget {
                 : SizedBox()
             : notification!
       ],
-      leadingWidth: isBackExist ? AppSize.w20 : context.width * 0.4,
+      leadingWidth: isBackExist ? AppSize.w100 : context.width * 0.4,
+
       leading: isBackExist
-          ? GestureDetector(
-              onTap: backPressed ?? () => Navigator.pop(context),
-              child: Consumer<LanguageProvider>(
-                builder: (_, language, __) => RotatedBox(
+          ? Consumer<LanguageProvider>(
+            builder: (_, language, __) => Padding(
+              padding:havePadding! ?EdgeInsets.symmetric(horizontal: 26.w): const EdgeInsets.all(8),
+
+              child: SizedBox(
+                width: 150.w,
+                child: RotatedBox(
                   quarterTurns: language.appLanguage == "ar" ? 2 : 0,
-                  child: Icon(
-                    language.appLanguage == "ar"
-                        ? Icons.arrow_forward_ios_outlined
-                        : Icons.arrow_back_ios_outlined,
-                    color: ColorResources.black,
-                    size: 24,
+                  child: IconButton(
+                    onPressed: backPressed ?? () {
+                      Navigator.pop(context);
+                    } ,
+                    icon: Icon(
+                      language.appLanguage == "ar"
+                          ? Icons.arrow_forward_ios_outlined
+                          : Icons.arrow_back_ios_outlined,
+                      color: ColorResources.black,
+                      size: 24,
+                    ),
                   ),
                 ),
               ),
-            )
+            ),
+          )
           : haveLogo
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

@@ -25,7 +25,7 @@ class _ClothesCounterWidgetState extends State<ClothesCounterWidget> {
   void _calculateTotalCost() {
     double sum = 0.0;
     _itemCounts.forEach((key, value) {
-      final pricingItem = widget.provider?.serviceDetails?.services?['Clothes']?[key];
+      final pricingItem = widget.provider?.serviceDetails?.clothes?[key];
       if (pricingItem != null) {
         sum += value * (pricingItem.price ?? 0);
       }
@@ -51,7 +51,7 @@ class _ClothesCounterWidgetState extends State<ClothesCounterWidget> {
                 mainAxisSpacing: 16,
                 childAspectRatio: 0.8, // Adjust for better spacing
               ),
-              itemCount: widget.provider?.serviceDetails?.services?['Clothes']?.length ?? 0,
+              itemCount: widget.provider?.serviceDetails?.clothes?.length ?? 0,
               itemBuilder: (context, index) {
                 return _buildClothingItem(index);
               },
@@ -69,8 +69,8 @@ class _ClothesCounterWidgetState extends State<ClothesCounterWidget> {
   }
 
   Widget _buildClothingItem(int index) {
-    if (widget.provider?.serviceDetails?.services != null && index < (widget.provider!.serviceDetails?.services?['Clothes']?.length ?? 0)) {
-      final item = widget.provider!.serviceDetails?.services?['Clothes']?[index];
+    if (widget.provider?.serviceDetails?.clothes != null && index < (widget.provider!.serviceDetails?.clothes?.length ?? 0)) {
+      final item = widget.provider!.serviceDetails?.clothes?[index];
       final price = item?.price ?? 0;
       final iconPath = item?.icon ?? ''; // Assuming 'icon' holds the image path
       final name = item?.name ?? 'Item';

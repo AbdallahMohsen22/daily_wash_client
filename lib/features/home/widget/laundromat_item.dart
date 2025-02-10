@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:on_express/core/extensions/media_values.dart';
 import 'package:on_express/core/utils/app_size.dart';
@@ -18,8 +21,40 @@ import 'package:on_express/models/providers_model.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../cubits/app_cubit/app_cubit.dart';
 import '../../../cubits/app_cubit/app_states.dart';
+import 'package:intl/intl.dart';
 
 class LaundromatItem extends StatelessWidget {
+
+  bool _isOutsideWorkingHours(String startTime, String endTime) {
+    final now = DateTime.now();
+
+    // Parse the start and end times
+    final start = _parseTime(startTime, now);
+    final end = _parseTime(endTime, now);
+
+    // Check if the current time is outside the range
+    return now.isBefore(start) || now.isAfter(end);
+  }
+
+  DateTime _parseTime(String time, DateTime referenceDate) {
+    try {
+      // Use the 'jm' pattern for AM/PM format
+      final format = DateFormat.jm();
+      final parsedTime = format.parse(time); // Parse "10:33 AM"
+      return DateTime(
+        referenceDate.year,
+        referenceDate.month,
+        referenceDate.day,
+        parsedTime.hour,
+        parsedTime.minute,
+      );
+    } catch (e) {
+      debugPrint("Error parsing time: $e");
+      return referenceDate; // Return the current date if parsing fails
+    }
+  }
+
+
   LaundromatItem({super.key,this.provider});
 
   ProviderData? provider;
@@ -28,7 +63,7 @@ class LaundromatItem extends StatelessWidget {
     return BlocConsumer<AppCubit, AppStates>(
   listener: (context, state) {},
   builder: (context, state) {
-    provider?.distance='500km';
+    String distance='500km';
 
     return GestureDetector(
       onTap: () {
@@ -36,6 +71,7 @@ class LaundromatItem extends StatelessWidget {
         AppCubit.get(context).currentAddressIndex = -1;
         AppCubit.get(context).couponModel = null;
         AppCubit.get(context).addressController.text = '';
+
         UIAlert.showMaterialPage(context, child: StoreDetailsPage(provider: provider,));
       },
       child: Container(
@@ -52,14 +88,37 @@ class LaundromatItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: ImageNet(
-                image:provider?.personalPhoto??'',
-                height: context.height * 0.11,
-                width: AppSize.w110,
-                fit: BoxFit.cover,
-              ),
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: ImageNet(
+                    image:provider?.personalPhoto??'',
+                    height: context.height * 0.11,
+                    width: AppSize.w110,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                if (_isOutsideWorkingHours(provider!.startTime!, provider!.endTime!))
+                Container(
+                  height: context.height * 0.11,
+                  width: AppSize.w110,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black.withOpacity(.5),
+                  ),
+                  child: Center(
+                    child: Text(
+                        'busy'.tr(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25.sp,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
             const Gap(10),
@@ -104,13 +163,13 @@ class LaundromatItem extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      if(provider?.distance!=null)
+                      if(distance!=null)
                       LaundromateTtile(
                         imageUrl: ImageResources.distance,
-                        title: provider!.distance!,
+                        title: distance!,
                         titleColor: ColorResources.black,
                       ),
-                      if(provider?.distance!=null)
+                      if(distance!=null)
                         const Gap(15),
                       LaundromateTtile(
                         imageUrl: ImageResources.location,

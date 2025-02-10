@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:on_express/core/generic_cubit/generic_cubit.dart';
 import 'package:on_express/core/utils/app_size.dart';
@@ -21,95 +22,98 @@ class PaymentMethod extends StatelessWidget {
   final StoreDetailsViewModel storeDetailsViewModel;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "select_payment_method".tr(),
-          style: FontManager.getMediumStyle(
-            fontSize: AppSize.sp18,
-            color: ColorResources.kFormTitleColor,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "select_payment_method".tr(),
+            style: FontManager.getMediumStyle(
+              fontSize: AppSize.sp18,
+              color: ColorResources.kFormTitleColor,
+            ),
           ),
-        ),
-        const Gap(5),
-        BlocBuilder<GenericCubit<int?>, GenericCubitState<int?>>(
-          bloc: storeDetailsViewModel.paymentMethodCubit,
-          builder: (context, state) {
-            return Column(
-              children: [
-                ///visa old
-                // GestureDetector(
-                //   onTap: (){
-                //     //UIAlert.showAlert(context,message: 'payment_method_not_available'.tr());
-                //     Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartViewBody()));
-                //   },
-                //   child: Container(
-                //     width: double.infinity,
-                //     height: AppSize.h60,
-                //     margin: EdgeInsets.symmetric(vertical: AppSize.h15),
-                //     padding: EdgeInsets.symmetric(horizontal: AppSize.w20),
-                //     decoration: BoxDecoration(
-                //       color: ColorResources.lightGrey4.withOpacity(0.4),
-                //       borderRadius: BorderRadius.circular(15),
-                //     ),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         CustomAssetImage(
-                //           imageUrl: storeDetailsViewModel.paymentMethods[0],
-                //           fit: BoxFit.contain,
-                //           height: AppSize.h40,
-                //           width: AppSize.w40,
-                //         ),
-                //         CustomAssetImage(
-                //           imageUrl: storeDetailsViewModel.paymentMethods[1],
-                //           fit: BoxFit.contain,
-                //           height: AppSize.h40,
-                //           width: AppSize.w40,
-                //         ),
-                //         CustomAssetImage(
-                //           imageUrl: storeDetailsViewModel.paymentMethods[2],
-                //           fit: BoxFit.contain,
-                //           height: AppSize.h40,
-                //           width: AppSize.w40,
-                //         ),
-                //         SelectedWidget(isSelected: false)
-                //       ],
-                //     ),
-                //   ),
-                // ),
+          const Gap(5),
+          BlocBuilder<GenericCubit<int?>, GenericCubitState<int?>>(
+            bloc: storeDetailsViewModel.paymentMethodCubit,
+            builder: (context, state) {
+              return Column(
+                children: [
+                  ///visa old
+                  // GestureDetector(
+                  //   onTap: (){
+                  //     //UIAlert.showAlert(context,message: 'payment_method_not_available'.tr());
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) => MyCartViewBody()));
+                  //   },
+                  //   child: Container(
+                  //     width: double.infinity,
+                  //     height: AppSize.h60,
+                  //     margin: EdgeInsets.symmetric(vertical: AppSize.h15),
+                  //     padding: EdgeInsets.symmetric(horizontal: AppSize.w20),
+                  //     decoration: BoxDecoration(
+                  //       color: ColorResources.lightGrey4.withOpacity(0.4),
+                  //       borderRadius: BorderRadius.circular(15),
+                  //     ),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         CustomAssetImage(
+                  //           imageUrl: storeDetailsViewModel.paymentMethods[0],
+                  //           fit: BoxFit.contain,
+                  //           height: AppSize.h40,
+                  //           width: AppSize.w40,
+                  //         ),
+                  //         CustomAssetImage(
+                  //           imageUrl: storeDetailsViewModel.paymentMethods[1],
+                  //           fit: BoxFit.contain,
+                  //           height: AppSize.h40,
+                  //           width: AppSize.w40,
+                  //         ),
+                  //         CustomAssetImage(
+                  //           imageUrl: storeDetailsViewModel.paymentMethods[2],
+                  //           fit: BoxFit.contain,
+                  //           height: AppSize.h40,
+                  //           width: AppSize.w40,
+                  //         ),
+                  //         SelectedWidget(isSelected: false)
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
 
-                ///visa new (comment now )
-                PaymentItem(
-                  paymentMethod: storeDetailsViewModel.paymentMethods.first,
-                  isSelected: storeDetailsViewModel.selectPaymentMethod
-                      == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first),
-                  onTap: () {
-                    storeDetailsViewModel.setSelectedPaymentMethod(
-                        storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first)
-                    );
-                  },
-                  noPaymentImage:false,
-                ),
+                  ///visa new (comment now )
+                  PaymentItem(
+                    paymentMethod: storeDetailsViewModel.paymentMethods.first,
+                    isSelected: storeDetailsViewModel.selectPaymentMethod
+                        == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first),
+                    onTap: () {
+                      storeDetailsViewModel.setSelectedPaymentMethod(
+                          storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.first)
+                      );
+                    },
+                    noPaymentImage:false,
+                  ),
 
-                ///cash
-                // PaymentItem(
-                //   paymentMethod: storeDetailsViewModel.paymentMethods.last,
-                //   isSelected: storeDetailsViewModel.selectPaymentMethod
-                //       == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last),
-                //   onTap: () {
-                //     storeDetailsViewModel.setSelectedPaymentMethod(
-                //         storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last)
-                //     );
-                //   },
-                //   noPaymentImage:true,
-                // )
-              ],
-            );
-          },
-        )
-      ],
+                  ///cash
+                  // PaymentItem(
+                  //   paymentMethod: storeDetailsViewModel.paymentMethods.last,
+                  //   isSelected: storeDetailsViewModel.selectPaymentMethod
+                  //       == storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last),
+                  //   onTap: () {
+                  //     storeDetailsViewModel.setSelectedPaymentMethod(
+                  //         storeDetailsViewModel.paymentMethods.indexOf(storeDetailsViewModel.paymentMethods.last)
+                  //     );
+                  //   },
+                  //   noPaymentImage:true,
+                  // )
+                ],
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 }

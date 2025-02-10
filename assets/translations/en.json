@@ -170,5 +170,16 @@
     "house_number": "House Number",
     "enter_house_number": "Enter House Number",
     "office_number": "Office Number",
-    "enter_office_number": "Enter Office Number"
+    "enter_office_number": "Enter Office Number",
+    "hours": "Number of hours",
+    "employee": "Number of employees",
+    "with Tools": "With Tools",
+    "Clothes": "Clothes",
+    "Cars": "Cars",
+    "House": "House",
+    "employee_cost": "Employee Cost",
+    "service_fee": "Service Fee",
+    "cleaning_fees": "Cleaning Fees",
+    "vehicle_cleaning_fees": "Vehicle Cleaning Fees",
+    "busy":"Busy"
 }

@@ -55,6 +55,7 @@ class ConfirmOrder extends StatelessWidget {
               ),
               const Gap(20),
               TotalOrderWidget(
+
                 deliveryFee: storeDetailsViewModel.selectedServiceType == 0
                     ?storeDetailsViewModel.selectedDelivery == 0
                     ?MenuCubit.get(context).settingsModel?.data?.shippingChargers?.deliveryBig

@@ -69,7 +69,7 @@
     "Subtotal":"المجموع الفرعي",
     "delivery_fee":"رسوم التوصيل",
     "laundry_fee":"رسوم الغسيل",
-    "transaction_fee":"رسوم المعاملة",
+    "transaction_fee":"رسوم الخدمة",
     "tax":"الضريبة ",
     "discount_coupon":"كوبون الخصم",
     "total_order":"المجموع الكلى",
@@ -170,5 +170,17 @@
     "house_number": "رقم المنزل",
     "enter_house_number": "ادخل رقم المنزل",
     "office_number": "رقم المكتب",
-    "enter_office_number": "ادخل رقم المكتب"
+    "enter_office_number": "ادخل رقم المكتب",
+    "hours": "عدد الساعات",
+    "employee": "عدد الموظفين",
+    "with Tools": "مع الأدوات",
+    "Clothes": "ملابس",
+    "Cars": "سيارات",
+    "House": "منازل",
+    "employee_cost": "تكلفة الموظف",
+    "service_fee": "رسوم الخدمة",
+    "cleaning_fees": "رسوم التنظيف",
+    "vehicle_cleaning_fees": "رسوم غسل المركبة",
+    "busy": "مشغول"
+
 }

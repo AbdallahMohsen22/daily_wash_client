@@ -142,7 +142,7 @@ class AppCubit extends Cubit<AppStates> {
 
   void takeFav(List<ProviderData> providers) {
     for (var provider in providers) {
-      favorites.addAll({provider.id!: provider.isFavorited!});
+      favorites.addAll({provider.id!: provider.isFavorited??false});
     }
   }
 

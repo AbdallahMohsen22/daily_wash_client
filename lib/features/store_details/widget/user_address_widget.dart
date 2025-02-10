@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:on_express/core/utils/app_size.dart';
@@ -46,116 +47,119 @@ class _AddressWidgetState extends State<UserAddressWidget> {
     return BlocConsumer<MenuCubit, MenuStates>(
   listener: (context, state) {},
   builder: (context, state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "address".tr(),
-          style: FontManager.getMediumStyle(
-            fontSize: AppSize.sp18,
-            color: ColorResources.kFormTitleColor,
-          ),
-        ),
-        const Gap(5),
-        ConditionalBuilder(
-          condition: MenuCubit.get(context).addressesModel!=null,
-          fallback: (c)=>Center(child: CupertinoActivityIndicator(),),
-          builder: (c)=> ConditionalBuilder(
-            condition: MenuCubit.get(context).addressesModel!.data!.isNotEmpty,
-            fallback: (c)=>Center(
-              child: Text(
-                'no_address'.tr()
-              ),
+    return Padding(
+      padding:EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "address".tr(),
+            style: FontManager.getMediumStyle(
+              fontSize: AppSize.sp18,
+              color: ColorResources.kFormTitleColor,
             ),
-            builder: (c)=>SizedBox(
-              height: MenuCubit.get(context).addressesModel!.data!.length ==1?150:280,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: MenuCubit.get(context).addressesModel!.data!.map((e) {
-                    int index = MenuCubit.get(context).addressesModel!.data!.indexOf(e);
-                    return InkWell(
-                      onTap: (){
-                        AppCubit.get(context).chooseAddress(
-                          index,
-                          LatLng(double.parse(e.latitude??''), double.parse(e.longitude??''))
-                        );
-                      },
-                      child: AddressItem(
-                        addressModel: e,
-                        isSelected: AppCubit.get(context).currentAddressIndex != -1
-                            ?AppCubit.get(context).currentAddressIndex == index
-                            :false,
-                        isEdit: true,
-                        isDefualt: true,
-                      ),
-                    );
-                  }).toList(),
+          ),
+          const Gap(5),
+          ConditionalBuilder(
+            condition: MenuCubit.get(context).addressesModel!=null,
+            fallback: (c)=>Center(child: CupertinoActivityIndicator(),),
+            builder: (c)=> ConditionalBuilder(
+              condition: MenuCubit.get(context).addressesModel!.data!.isNotEmpty,
+              fallback: (c)=>Center(
+                child: Text(
+                  'no_address'.tr()
                 ),
               ),
-            ),
-          ),
-        ),
-        const Gap(15),
-        Align(
-          alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      showMore = !showMore;
-                    });
-                  },
-                  child: Text(
-                    showMore?"less".tr():"more".tr(),
-                    style: FontManager.getMediumStyle(
-                      fontSize: AppSize.sp14,
-                      color: ColorResources.primaryColor,
-                    ).copyWith(decoration: TextDecoration.underline),
+              builder: (c)=>SizedBox(
+                height: MenuCubit.get(context).addressesModel!.data!.length ==1?150:280,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: MenuCubit.get(context).addressesModel!.data!.map((e) {
+                      int index = MenuCubit.get(context).addressesModel!.data!.indexOf(e);
+                      return InkWell(
+                        onTap: (){
+                          AppCubit.get(context).chooseAddress(
+                            index,
+                            LatLng(double.parse(e.latitude??''), double.parse(e.longitude??''))
+                          );
+                        },
+                        child: AddressItem(
+                          addressModel: e,
+                          isSelected: AppCubit.get(context).currentAddressIndex != -1
+                              ?AppCubit.get(context).currentAddressIndex == index
+                              :false,
+                          isEdit: true,
+                          isDefualt: true,
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
-        !showMore
-            ? const SizedBox()
-            : Align(
-                alignment: Alignment.center,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Gap(15),
-                    ConditionalBuilder(
-                      condition: AppCubit.get(context).addressController.text.isEmpty,
-                      fallback: (c)=>Text(
-                        AppCubit.get(context).addressController.text,
-                        style: FontManager.getMediumStyle(
-                          fontSize: AppSize.sp14,
-                          color: ColorResources.black,
+            ),
+          ),
+          const Gap(15),
+          Align(
+            alignment: Alignment.center,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        showMore = !showMore;
+                      });
+                    },
+                    child: Text(
+                      showMore?"less".tr():"more".tr(),
+                      style: FontManager.getMediumStyle(
+                        fontSize: AppSize.sp14,
+                        color: ColorResources.primaryColor,
+                      ).copyWith(decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ),
+          !showMore
+              ? const SizedBox()
+              : Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Gap(15),
+                      ConditionalBuilder(
+                        condition: AppCubit.get(context).addressController.text.isEmpty,
+                        fallback: (c)=>Text(
+                          AppCubit.get(context).addressController.text,
+                          style: FontManager.getMediumStyle(
+                            fontSize: AppSize.sp14,
+                            color: ColorResources.black,
+                          ),
+                        ),
+                        builder: (c)=> CustomButton(
+                          title: "use_current_address".tr(),
+                          isSelected: true,
+                          onTap: () {
+                            AppCubit.get(context).chooseMyCurrentLocation(context);
+
+                          },
                         ),
                       ),
-                      builder: (c)=> CustomButton(
-                        title: "use_current_address".tr(),
-                        isSelected: true,
-                        onTap: () {
-                          AppCubit.get(context).chooseMyCurrentLocation(context);
-
+                      const Gap(15),
+                      CustomButton(
+                        title: "add_new_address".tr(),
+                        isSelected: false,
+                        onTap: ()async {
+                          if (AppCubit.get(context).position != null) {
+                            navigateTo(context, AddNewAddressPage());
+                          } else {
+                            await AppCubit.get(context).getCurrentLocation(context);
+                            navigateTo(context, AddNewAddressPage());
+                          }
                         },
                       ),
-                    ),
-                    const Gap(15),
-                    CustomButton(
-                      title: "add_new_address".tr(),
-                      isSelected: false,
-                      onTap: ()async {
-                        if (AppCubit.get(context).position != null) {
-                          navigateTo(context, AddNewAddressPage());
-                        } else {
-                          await AppCubit.get(context).getCurrentLocation(context);
-                          navigateTo(context, AddNewAddressPage());
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              )
-      ],
+                    ],
+                  ),
+                )
+        ],
+      ),
     );
   },
 );
