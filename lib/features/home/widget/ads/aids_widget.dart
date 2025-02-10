@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +10,7 @@ import 'package:on_express/features/home/home_view_model.dart';
 import 'package:on_express/features/home/widget/ads/ads_item.dart';
 import '../../../../core/widget/shimmer.dart';
 import '../../../../cubits/app_cubit/app_cubit.dart';
-import '../../../contect_us/contactus_screen.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class AdsWidget extends StatelessWidget {
   const AdsWidget({
