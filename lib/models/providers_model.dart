@@ -315,10 +315,10 @@ class ProvidersModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'message': message,
-    'status': status,
-    'data': data?.map((v) => v.toJson()).toList(),
-  };
+        'message': message,
+        'status': status,
+        'data': data?.map((v) => v.toJson()).toList(),
+      };
 }
 
 class ProvidersPaginationModel {
@@ -347,10 +347,10 @@ class ProvidersPaginationModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'message': message,
-    'status': status,
-    'data': data?.toJson(),
-  };
+        'message': message,
+        'status': status,
+        'data': data?.toJson(),
+      };
 }
 
 class PaginationData {
@@ -373,11 +373,11 @@ class PaginationData {
   }
 
   Map<String, dynamic> toJson() => {
-    'currentPage': currentPage,
-    'pages': pages,
-    'count': count,
-    'data': data?.map((v) => v.toJson()).toList(),
-  };
+        'currentPage': currentPage,
+        'pages': pages,
+        'count': count,
+        'data': data?.map((v) => v.toJson()).toList(),
+      };
 }
 
 class ProviderData {
@@ -456,7 +456,8 @@ class ProviderData {
     rates = json['rates'] as List<dynamic>?;
     createdAt = json['created_at'] as String?;
     serviceDetails = json['serviceDetails'] != null
-        ? ServiceDetails.fromJson(json['serviceDetails'] as Map<String, dynamic>)
+        ? ServiceDetails.fromJson(
+            json['serviceDetails'] as Map<String, dynamic>)
         : null;
     rushFees = json['rush_fees'] as int?;
     transactionFees = json['transaction_fees'] as int?;
@@ -466,32 +467,32 @@ class ProviderData {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'item_number': itemNumber,
-    'name': name,
-    'current_latitude': currentLatitude,
-    'current_longitude': currentLongitude,
-    'firebase_token': firebaseToken,
-    'whatsapp_number': whatsappNumber,
-    'phone_number': phoneNumber,
-    'personal_photo': personalPhoto,
-    'current_language': currentLanguage,
-    'total_rate': totalRate,
-    'total_rate_number': totalRateNumber,
-    'total_rate_count': totalRateCount,
-    'status': status,
-    'address': address,
-    'is_favorited': isFavorited,
-    'reviews': reviews,
-    'rates': rates,
-    'created_at': createdAt,
-    'serviceDetails': serviceDetails?.toJson(),
-    'rush_fees': rushFees,
-    'transaction_fees': transactionFees,
-    'taxes': taxes,
-    'start_time': startTime,
-    'end_time': endTime,
-  };
+        'id': id,
+        'item_number': itemNumber,
+        'name': name,
+        'current_latitude': currentLatitude,
+        'current_longitude': currentLongitude,
+        'firebase_token': firebaseToken,
+        'whatsapp_number': whatsappNumber,
+        'phone_number': phoneNumber,
+        'personal_photo': personalPhoto,
+        'current_language': currentLanguage,
+        'total_rate': totalRate,
+        'total_rate_number': totalRateNumber,
+        'total_rate_count': totalRateCount,
+        'status': status,
+        'address': address,
+        'is_favorited': isFavorited,
+        'reviews': reviews,
+        'rates': rates,
+        'created_at': createdAt,
+        'serviceDetails': serviceDetails?.toJson(),
+        'rush_fees': rushFees,
+        'transaction_fees': transactionFees,
+        'taxes': taxes,
+        'start_time': startTime,
+        'end_time': endTime,
+      };
 }
 
 class ServiceDetails {
@@ -548,22 +549,23 @@ class ServiceDetails {
   }
 
   Map<String, dynamic> toJson() => {
-    'House': house?.map((v) => v.toJson()).toList(),
-    'default_NumOfEmployees': defaultNumOfEmployees,
-    'default_Price': defaultPrice,
-    'extra_employee': extraEmployee,
-    'with_tools': withTools,
-    'employee_price': employeePrice,
-    'Cars': cars?.map((v) => v.toJson()).toList(),
-    'Clothes': clothes?.map((v) => v.toJson()).toList(),
-    'is_delivery': isDelivery,
-    'delivery_fees_per_kilo': deliveryFeesPerKilo,
-  };
+        'House': house?.map((v) => v.toJson()).toList(),
+        'default_NumOfEmployees': defaultNumOfEmployees,
+        'default_Price': defaultPrice,
+        'extra_employee': extraEmployee,
+        'with_tools': withTools,
+        'employee_price': employeePrice,
+        'Cars': cars?.map((v) => v.toJson()).toList(),
+        'Clothes': clothes?.map((v) => v.toJson()).toList(),
+        'is_delivery': isDelivery,
+        'delivery_fees_per_kilo': deliveryFeesPerKilo,
+      };
 }
 
 class House {
   String? id;
   String? name;
+  String? ar_name;
   String? icon;
   int? price;
 
@@ -572,21 +574,24 @@ class House {
   House.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String?;
     name = json['name'] as String?;
+    ar_name = json['ar_name'] as String?;
     icon = json['icon'] as String?;
     price = json['price'] as int?;
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'icon': icon,
-    'price': price,
-  };
+        'id': id,
+        'name': name,
+        'ar_name': ar_name,
+        'icon': icon,
+        'price': price,
+      };
 }
 
 class Car {
   String? id;
   String? name;
+  String? ar_name;
   String? icon;
   int? price;
 
@@ -595,21 +600,24 @@ class Car {
   Car.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String?;
     name = json['name'] as String?;
+    ar_name = json['ar_name'] as String?;
     icon = json['icon'] as String?;
     price = json['price'] as int?;
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'icon': icon,
-    'price': price,
-  };
+        'id': id,
+        'name': name,
+        'ar_name': ar_name,
+        'icon': icon,
+        'price': price,
+      };
 }
 
 class Clothing {
   String? id;
   String? name;
+  String? ar_name;
   String? icon;
   int? price;
 
@@ -618,14 +626,16 @@ class Clothing {
   Clothing.fromJson(Map<String, dynamic> json) {
     id = json['id'] as String?;
     name = json['name'] as String?;
+    ar_name = json['ar_name'] as String?;
     icon = json['icon'] as String?;
     price = json['price'] as int?;
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'icon': icon,
-    'price': price,
-  };
+        'id': id,
+        'name': name,
+        'ar_name': ar_name,
+        'icon': icon,
+        'price': price,
+      };
 }

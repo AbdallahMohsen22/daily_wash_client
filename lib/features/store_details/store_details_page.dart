@@ -1,583 +1,3 @@
-// import 'dart:developer';
-//
-// import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-// import 'package:easy_localization/easy_localization.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:gap/gap.dart';
-// import 'package:logger/logger.dart';
-// import 'package:on_express/core/componets/componets.dart';
-// import 'package:on_express/core/constants/app_constants.dart';
-// import 'package:on_express/core/widget/base_app_bar.dart';
-// import 'package:on_express/core/widget/custom_button.dart';
-// import 'package:on_express/core/widget/default_scaffold.dart';
-// import 'package:on_express/core/widget/verification_phone_dialogs.dart';
-// import 'package:on_express/features/login/login_page.dart';
-// import 'package:on_express/features/store_details/store_details_view_model.dart';
-// import 'package:on_express/features/store_details/widget/coupon_notes_widget.dart';
-// import 'package:on_express/features/store_details/widget/payment_method.dart';
-// import 'package:on_express/features/store_details/widget/total_order.dart';
-// import 'package:on_express/features/store_details/widget/user_address_widget.dart';
-// import 'package:on_express/features/store_details/widget/date_time_widget.dart';
-// import 'package:on_express/features/store_details/widget/pic_store_service.dart';
-// import 'package:on_express/features/store_details/widget/pick_delivery_service.dart';
-// import 'package:on_express/features/store_details/widget/store_image.dart';
-// import 'package:on_express/models/providers_model.dart';
-//
-// import '../../cubits/app_cubit/app_cubit.dart';
-// import '../../cubits/app_cubit/app_states.dart';
-// import '../../cubits/menu_cubit/menu_cubit.dart';
-// import '../../cubits/menu_cubit/menu_states.dart';
-// import '../payment/data/repos/checkout_repo_impl.dart';
-// import '../payment/presentation/manager/cuibt/payment_cuibt.dart';
-// import '../payment/presentation/manager/cuibt/payment_state.dart';
-// import '../payment/presentation/views/widgets/custom_botton_bloc_consumer.dart';
-//
-// var logger = Logger();
-//
-// // ignore: must_be_immutable
-// class StoreDetailsPage extends StatefulWidget {
-//   StoreDetailsPage({super.key, required this.provider});
-//
-//   ProviderData? provider;
-//
-//   @override
-//   State<StoreDetailsPage> createState() => _StoreDetailsPageState();
-// }
-//
-// class _StoreDetailsPageState extends State<StoreDetailsPage> {
-//   StoreDetailsViewModel storeDetailsViewModel = StoreDetailsViewModel();
-//
-//   CouponAndNotes couponAndNotes = CouponAndNotes();
-//
-//   final Map<int, int> _itemCounts = {}; // Tracks number of pieces entered
-//   double _totalCost = 0.0; // Tracks total cost
-//
-//   void _updateItemCount(int index, int count, int price) {
-//     setState(() {
-//       _itemCounts[index] = count;
-//       _calculateTotalCost();
-//     });
-//   }
-//
-//   void _calculateTotalCost() {
-//     double sum = 0.0;
-//     _itemCounts.forEach((key, value) {
-//       final pricingItem =
-//           widget.provider?.serviceDetails?.services?['Clothes']?[key];
-//       if (pricingItem != null) {
-//         sum += value * (pricingItem.price ?? 0);
-//       }
-//     });
-//     _totalCost = sum;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocConsumer<MenuCubit, MenuStates>(
-//       listener: (context, state) {},
-//       builder: (context, state) {
-//         return BlocConsumer<AppCubit, AppStates>(
-//           listener: (context, state) {},
-//           builder: (context, state) {
-//             var cubit = AppCubit.get(context);
-//             var deliveryFee = storeDetailsViewModel.selectedServiceType == 0
-//                 ? storeDetailsViewModel.selectedDelivery == 0
-//                     ? MenuCubit.get(context)
-//                         .settingsModel
-//                         ?.data
-//                         ?.shippingChargers
-//                         ?.deliveryBig
-//                     : MenuCubit.get(context)
-//                         .settingsModel
-//                         ?.data
-//                         ?.shippingChargers
-//                         ?.deliverySmall
-//                 : storeDetailsViewModel.selectedDelivery == 0
-//                     ? MenuCubit.get(context)
-//                         .settingsModel
-//                         ?.data
-//                         ?.shippingChargers
-//                         ?.pickupBig
-//                     : MenuCubit.get(context)
-//                         .settingsModel
-//                         ?.data
-//                         ?.shippingChargers
-//                         ?.pickupSmall;
-//             logger.d('address $_totalCost');
-//
-//             return DefaultScaffold(
-//               child: NestedScrollView(
-//                 physics: const BouncingScrollPhysics(),
-//                 headerSliverBuilder: (context, innerBoxIsScrolled) => [
-//                   BaseAppBar(isBackExist: true),
-//                 ],
-//                 body: SingleChildScrollView(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       StoreImage(provider: widget.provider),
-//                       const Gap(30),
-//                       PickStoreServiceType(
-//                         storeDetailsViewModel: storeDetailsViewModel,
-//                       ),
-//                       const Gap(10),
-//                       PickDeliveryService(
-//                         storeDetailsViewModel: storeDetailsViewModel,
-//                       ),
-//                       const Gap(10),
-//                       // ClothesCounterWidget(provider: provider),
-//                       Padding(
-//                         padding: const EdgeInsets.all(16.0),
-//                         child: Column(
-//                           children: [
-//                             // First Row
-//                             widget.provider!.serviceDetails!
-//                                         .services!['Cars'] !=
-//                                     null
-//                                 ? SizedBox(
-//                                     height: 250.h,
-//                                     child: GridView.builder(
-//                                         gridDelegate:
-//                                             SliverGridDelegateWithFixedCrossAxisCount(
-//                                           crossAxisCount: 4,
-//                                           crossAxisSpacing: 5,
-//                                           mainAxisSpacing: 5,
-//                                           childAspectRatio:
-//                                               0.5, // Adjust item size
-//                                         ),
-//                                         itemCount: widget
-//                                             .provider!
-//                                             .serviceDetails!
-//                                             .services!['Cars']!
-//                                             .length,
-//                                         itemBuilder: (context, index) {
-//                                           return _buildCarItem(index);
-//                                         }),
-//                                   )
-//                                 : Container(),
-//
-//                             SizedBox(height: 20),
-//                             // Second Row
-//                             widget.provider!.serviceDetails!
-//                                         .services!['House'] !=
-//                                     null
-//                                 ? SizedBox(
-//                                     height: 250.h,
-//                                     child: GridView.builder(
-//                                         gridDelegate:
-//                                             SliverGridDelegateWithFixedCrossAxisCount(
-//                                           crossAxisCount: 4,
-//                                           crossAxisSpacing: 5,
-//                                           mainAxisSpacing: 5,
-//                                           childAspectRatio:
-//                                               0.5, // Adjust item size
-//                                         ),
-//                                         itemCount: widget
-//                                             .provider!
-//                                             .serviceDetails!
-//                                             .services!['House']!
-//                                             .length,
-//                                         itemBuilder: (context, index) {
-//                                           return _buildHouseItem(index);
-//                                         }),
-//                                   )
-//                                 : Container(),
-//
-//                             widget.provider!.serviceDetails!
-//                                         .services!['Clothes'] !=
-//                                     null
-//                                 ? SizedBox(
-//                                     height: 250.h,
-//                                     child: GridView.builder(
-//                                         gridDelegate:
-//                                             SliverGridDelegateWithFixedCrossAxisCount(
-//                                           crossAxisCount: 4,
-//                                           crossAxisSpacing: 5,
-//                                           mainAxisSpacing: 5,
-//                                           childAspectRatio:
-//                                               0.5, // Adjust item size
-//                                         ),
-//                                         itemCount: widget
-//                                             .provider!
-//                                             .serviceDetails!
-//                                             .services!['Clothes']!
-//                                             .length,
-//                                         itemBuilder: (context, index) {
-//                                           return _buildClothingItem(index);
-//                                         }),
-//                                   )
-//                                 : Container(),
-//
-//                             SizedBox(height: 20),
-//                             // Total Cost Display
-//                             Row(
-//                               children: [
-//                                 Text(
-//                                   "laundry_fee".tr(),
-//                                   style: TextStyle(
-//                                       fontSize: 18,
-//                                       fontWeight: FontWeight.bold),
-//                                 ),
-//                                 Text(
-//                                   ": ${_totalCost.toStringAsFixed(2)} AED",
-//                                   style: TextStyle(
-//                                       fontSize: 18,
-//                                       fontWeight: FontWeight.bold),
-//                                 )
-//                               ],
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       const Gap(30),
-//                       DateAndTimeWidget(
-//                         storeDetailsViewModel: storeDetailsViewModel,
-//                       ),
-//                       const Gap(20),
-//                       if (token != null)
-//                         UserAddressWidget(
-//                           storeDetailsViewModel: storeDetailsViewModel,
-//                         ),
-//                       if (token != null) const Gap(20),
-//                       PaymentMethod(
-//                         storeDetailsViewModel: storeDetailsViewModel,
-//                       ),
-//                       const Gap(20),
-//                       couponAndNotes,
-//                       const Gap(20),
-//                       ConditionalBuilder(
-//                         condition: MenuCubit.get(context).settingsModel != null,
-//                         fallback: (c) => Center(
-//                           child: CupertinoActivityIndicator(),
-//                         ),
-//                         builder: (c) => TotalOrderWidget(
-//                             deliveryFee: deliveryFee,
-//                             laundryFee: _totalCost.toInt(),
-//                             provider: widget.provider),
-//                       ),
-//                       // Text("Total amount====>>>${total}"),
-//
-//                       const Gap(30),
-//                       Align(
-//                         alignment: Alignment.center,
-//                         child: ConditionalBuilder(
-//                           condition: state is! CreateOrderLoadingState,
-//                           fallback: (context) => CupertinoActivityIndicator(),
-//                           builder: (context) => CustomButton(
-//                             title: "Submit_request".tr(),
-//                             onTap: () {
-//                               final double transactionFees = (_totalCost) *
-//                                   ((widget.provider?.transactionFees ?? 0) /
-//                                       100);
-//                               if (token != null) {
-//                                 if (MenuCubit.get(context)
-//                                         .userModel
-//                                         ?.data
-//                                         ?.phoneNumber
-//                                         ?.isNotEmpty ??
-//                                     false) {
-//                                   if (MenuCubit.get(context)
-//                                           .userModel
-//                                           ?.data
-//                                           ?.status ==
-//                                       2) {
-//                                     if (storeDetailsViewModel
-//                                             .selectPaymentMethod ==
-//                                         0) {
-//                                       // Show the payment options modal bottom sheet
-//                                       showModalBottomSheet(
-//                                         context: context,
-//                                         shape: RoundedRectangleBorder(
-//                                             borderRadius:
-//                                                 BorderRadius.circular(16)),
-//                                         builder: (context) {
-//                                           return BlocProvider(
-//                                               create: (context) => PaymentCubit(
-//                                                   CheckoutRepoImpl()),
-//                                               child: BlocConsumer<PaymentCubit,
-//                                                   PaymentState>(
-//                                                 listener: (context, state) {
-//                                                   if (state is PaymentSuccess) {
-//                                                     // Navigator.of(context).pushReplacement(
-//                                                     //     MaterialPageRoute(builder: (context) => ThankYouView()));
-//
-//                                                     storeDetailsViewModel
-//                                                         .addRequest(
-//                                                       context: context,
-//                                                       storeDetailsViewModel:
-//                                                           storeDetailsViewModel,
-//                                                       providerId:
-//                                                           widget.provider?.id ??
-//                                                               '',
-//                                                       couponCode: cubit
-//                                                                   .couponModel !=
-//                                                               null
-//                                                           ? couponAndNotes
-//                                                               .couponController
-//                                                               .text
-//                                                           : null,
-//                                                       additionalNotes:
-//                                                           couponAndNotes
-//                                                                   .notesController
-//                                                                   .text
-//                                                                   .isNotEmpty
-//                                                               ? couponAndNotes
-//                                                                   .notesController
-//                                                                   .text
-//                                                               : null,
-//                                                     );
-//                                                     print(
-//                                                         "Total====>>>>${deliveryFee! + _totalCost.toInt() + transactionFees.toInt() + widget.provider!.taxes!}");
-//                                                   }
-//                                                   if (state is PaymentFailure) {
-//                                                     Navigator.pop(context);
-//
-//                                                     print(
-//                                                         "Error=====>>>${state.errMessage}");
-//                                                   }
-//                                                 },
-//                                                 builder: (context, state) {
-//                                                   return CustomButtonBlocConsumer(
-//                                                     total: deliveryFee! +
-//                                                         _totalCost.toInt() +
-//                                                         transactionFees
-//                                                             .toInt() +
-//                                                         widget.provider!.taxes!
-//                                                             .toInt(),
-//                                                   );
-//                                                 },
-//                                               ));
-//                                         },
-//                                       );
-//                                     } else {
-//                                       // Handle cash submission directly
-//                                       storeDetailsViewModel.addRequest(
-//                                         context: context,
-//                                         storeDetailsViewModel:
-//                                             storeDetailsViewModel,
-//                                         providerId: widget.provider?.id ?? '',
-//                                         couponCode: cubit.couponModel != null
-//                                             ? couponAndNotes
-//                                                 .couponController.text
-//                                             : null,
-//                                         additionalNotes: couponAndNotes
-//                                                 .notesController.text.isNotEmpty
-//                                             ? couponAndNotes
-//                                                 .notesController.text
-//                                             : null,
-//                                       );
-//                                     }
-//                                   } else {
-//                                     // User's phone number is not verified
-//                                     showDialog(
-//                                         context: context,
-//                                         builder: (context) =>
-//                                             VerifyPhoneDialog());
-//                                   }
-//                                 } else {
-//                                   // User's phone number is empty
-//                                   showDialog(
-//                                       context: context,
-//                                       builder: (context) =>
-//                                           UpdatePhoneDialog());
-//                                 }
-//                               } else {
-//                                 // User is not logged in
-//                                 navigateTo(
-//                                     context, LoginPage(fromLogin: false));
-//                               }
-//                             },
-//                             isSelected: true,
-//                           ),
-//                         ),
-//                       ),
-//                       const Gap(50),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             );
-//           },
-//         );
-//       },
-//     );
-//   }
-//
-//   Widget _buildClothingItem(int index) {
-//     if (widget.provider?.serviceDetails?.services != null &&
-//         index <
-//             (widget.provider!.serviceDetails?.services?['Clothes']?.length ??
-//                 0)) {
-//       final item =
-//           widget.provider!.serviceDetails?.services?['Clothes']?[index];
-//       final price = item?.price ?? 0;
-//       final iconPath = item?.icon ?? ''; // Assuming 'icon' holds the image path
-//       final name = item?.name ?? 'Item';
-//
-//       return Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           // Icon
-//           Image.network(
-//             iconPath,
-//             width: 40,
-//             height: 40,
-//             fit: BoxFit.contain,
-//           ),
-//           SizedBox(height: 8),
-//           // Name
-//           Text(
-//             name,
-//             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-//             textAlign: TextAlign.center,
-//           ),
-//           SizedBox(height: 4),
-//           // Price
-//           Text(
-//             "$price AED",
-//             style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-//           ),
-//           SizedBox(height: 4),
-//           // Counter
-//           _textField(index, price),
-//         ],
-//       );
-//     } else {
-//       // Placeholder if item not available
-//       return SizedBox.shrink();
-//     }
-//   }
-//
-//   Widget _buildCarItem(int index) {
-//     if (widget.provider?.serviceDetails?.services != null &&
-//         index <
-//             (widget.provider!.serviceDetails?.services?['Cars']?.length ?? 0)) {
-//       final item = widget.provider!.serviceDetails?.services?['Cars']?[index];
-//       final price = item?.price ?? 0;
-//       final iconPath = item?.icon ?? ''; // Assuming 'icon' holds the image path
-//       final name = item?.name ?? 'Item';
-//
-//       return Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           // Icon
-//           Image.network(
-//             iconPath,
-//             width: 40,
-//             height: 40,
-//             fit: BoxFit.contain,
-//           ),
-//           SizedBox(height: 8),
-//           // Name
-//           Text(
-//             name,
-//             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-//             textAlign: TextAlign.center,
-//           ),
-//           SizedBox(height: 4),
-//           // Price
-//           Text(
-//             "$price AED",
-//             style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-//           ),
-//           SizedBox(height: 4),
-//           // Counter
-//           _textField(index, price),
-//         ],
-//       );
-//     } else {
-//       // Placeholder if item not available
-//       return SizedBox.shrink();
-//     }
-//   }
-//
-//   Widget _buildHouseItem(int index) {
-//     if (widget.provider?.serviceDetails?.services != null &&
-//         index <
-//             (widget.provider!.serviceDetails?.services?['House']?.length ??
-//                 0)) {
-//       final item = widget.provider!.serviceDetails?.services?['House']?[index];
-//       final price = item?.price ?? 0;
-//       final iconPath = item?.icon ?? ''; // Assuming 'icon' holds the image path
-//       final name = item?.name ?? 'Item';
-//
-//       return Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           // Icon
-//           Image.network(
-//             iconPath,
-//             width: 40,
-//             height: 40,
-//             fit: BoxFit.contain,
-//           ),
-//           SizedBox(height: 8),
-//           // Name
-//           Text(
-//             name,
-//             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-//             textAlign: TextAlign.center,
-//           ),
-//           SizedBox(height: 4),
-//           // Price
-//           Text(
-//             "$price AED",
-//             style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-//           ),
-//           SizedBox(height: 4),
-//           // Counter
-//           _textField(index, price),
-//         ],
-//       );
-//     } else {
-//       // Placeholder if item not available
-//       return SizedBox.shrink();
-//     }
-//   }
-//
-//   Widget _clothingItem(String imagePath, Widget textField) {
-//     return Column(
-//       children: [
-//         Row(
-//           children: [
-//             Image.asset(
-//               imagePath,
-//               width: 30,
-//               height: 30,
-//               fit: BoxFit.contain,
-//             ),
-//             SizedBox(width: 8), // Space between image and text field
-//             textField,
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-//
-//   Widget _textField(int index, int price, {bool isPlaceholder = false}) {
-//     return SizedBox(
-//       width: 30,
-//       height: 30,
-//       child: TextField(
-//         decoration: InputDecoration(
-//           hintStyle: TextStyle(color: Colors.grey.withOpacity(.3)),
-//           hintText: isPlaceholder ? "X" : "0",
-//           border: OutlineInputBorder(),
-//           contentPadding: EdgeInsets.symmetric(horizontal: 8),
-//         ),
-//         keyboardType: TextInputType.number,
-//         enabled: !isPlaceholder, // Disable input for placeholder
-//         onChanged: (value) {
-//           final count = int.tryParse(value) ?? 0;
-//           _updateItemCount(index, count, price);
-//         },
-//       ),
-//     );
-//   }
-// }
 // //051900004
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -615,7 +35,6 @@ import '../payment/presentation/manager/cuibt/payment_cuibt.dart';
 import '../payment/presentation/manager/cuibt/payment_state.dart';
 import '../payment/presentation/views/widgets/custom_botton_bloc_consumer.dart';
 
-
 // ignore: must_be_immutable
 class StoreDetailsPage extends StatefulWidget {
   StoreDetailsPage({super.key, required this.provider});
@@ -630,22 +49,22 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
   StoreDetailsViewModel storeDetailsViewModel = StoreDetailsViewModel();
   CouponAndNotes couponAndNotes = CouponAndNotes();
   final Map<int, int> _itemCounts = {};
-  final Map<int,int> selectedServices = {}; // Tracks selected service indices
-  final Set<int>selectedServicesBool={};
+  final Map<int, int> selectedServices = {}; // Tracks selected service indices
+  final Set<int> selectedServicesBool = {};
 // Tracks number of pieces entered
   final Map<int, TextEditingController> _textControllers = {};
   double _totalCost = 0.0; // Tracks total cost
   bool _selectedItems = false; // Tracks if additional tools are selected
-  int? _employeeCount ;
-  int _hoursCount=1;// Tracks the number of employees
+  int? _employeeCount = 1;
+  int _hoursCount = 1; // Tracks the number of employees
   @override
   void initState() {
     super.initState();
     _calculateTotalCost();
 
     for (int i = 0;
-    i < (widget.provider?.serviceDetails?.cars?.length ?? 0);
-    i++) {
+        i < (widget.provider?.serviceDetails?.cars?.length ?? 0);
+        i++) {
       _textControllers[i] = TextEditingController(text: '0');
     }
   }
@@ -667,10 +86,8 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
   void _calculateTotalCost() {
     double sum = 0.0;
 
-
-
     if (_employeeCount == null) {
-      _employeeCount=widget.provider?.serviceDetails?.defaultNumOfEmployees;
+      _employeeCount = widget.provider?.serviceDetails?.defaultNumOfEmployees;
     }
     // Calculate the cost of clothes
     List<Clothing>? clothes = widget.provider?.serviceDetails?.clothes;
@@ -686,9 +103,8 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
     // Calculate the total cost of car services
     if (widget.provider?.serviceDetails?.cars != null) {
       for (int i = 0;
-      i <
-          (widget.provider!.serviceDetails!.cars!.length );
-      i++) {
+          i < (widget.provider!.serviceDetails!.cars!.length);
+          i++) {
         final item = widget.provider!.serviceDetails!.cars![i];
         final price = item.price ?? 0;
         int count = _itemCounts[i] ?? 0;
@@ -697,12 +113,14 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
     }
 
     // Calculate the total cost of house service
-    if (widget.provider?.serviceDetails?.house != null) {
-     sum+= widget.provider!.serviceDetails!.defaultPrice!*_employeeCount!*_hoursCount;
-     // int sumofPrices = selectedServices.values.fold(0, (previousValue, element) => previousValue + element);
-     //  sum+=sumofPrices*_hoursCount;
+    if (widget.provider?.serviceDetails?.house != null &&
+        widget.provider?.serviceDetails?.defaultPrice != null) {
+      sum += widget.provider!.serviceDetails!.defaultPrice! *
+          _employeeCount! *
+          _hoursCount;
+      // int sumofPrices = selectedServices.values.fold(0, (previousValue, element) => previousValue + element);
+      //  sum+=sumofPrices*_hoursCount;
     }
-
 
     // Add additional costs if applicable
     if (_selectedItems && widget.provider?.serviceDetails?.withTools != null) {
@@ -712,7 +130,6 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
     setState(() {
       _totalCost = sum;
     });
-
   }
 
   @override
@@ -720,10 +137,9 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
     return BlocConsumer<MenuCubit, MenuStates>(
       listener: (context, state) {},
       builder: (context, state) {
-        List<Clothing>? clothes =
-            widget.provider!.serviceDetails!.clothes;
-        List<Car>? cars= widget.provider!.serviceDetails!.cars;
-        List<House>? houses= widget.provider!.serviceDetails!.house;
+        List<Clothing>? clothes = widget.provider!.serviceDetails!.clothes;
+        List<Car>? cars = widget.provider!.serviceDetails!.cars;
+        List<House>? houses = widget.provider!.serviceDetails!.house;
         return BlocConsumer<AppCubit, AppStates>(
           listener: (context, state) {},
           builder: (context, state) {
@@ -755,7 +171,11 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                 : 0;
 
             return DefaultScaffold(
-              backGround:cars!=null? ImageResources.carBackGround:houses!=null ?ImageResources.houseBackGround:null ,
+              backGround: cars != null
+                  ? ImageResources.carBackGround
+                  : houses != null
+                      ? ImageResources.houseBackGround
+                      : null,
               haveBackground: true,
               havePadding: false,
               child: NestedScrollView(
@@ -789,7 +209,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                               ),
                             )
                           : Container(),
-                      cars!= null
+                      cars != null
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -803,10 +223,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                for (int i = 0;
-                                    i <
-                                        cars.length;
-                                    i++)
+                                for (int i = 0; i < cars.length; i++)
                                   _buildCarItem(i),
                               ],
                             )
@@ -816,123 +233,164 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
                         padding: EdgeInsets.all(16.0.w),
                         child: Column(
                           children: [
-                            houses !=
-                                    null
+                            houses != null
                                 ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                              EmployeeCountSelector(
-                                start: widget.provider!.serviceDetails!.defaultNumOfEmployees!,
-                                selectedEmployeeCount: _employeeCount ?? 1,
-                                onChanged: (count) {
-                                  setState(() {
-                                    _employeeCount = count;
-                                    _calculateTotalCost();
-                                  });
-                                },
-                              ),
-                              Gap(10),
-                              HoursCountSelector(
-                                selectedHourCount: _hoursCount,
-                                onChanged: (hours) {
-                                  setState(() {
-                                    _hoursCount = hours;
-                                    _calculateTotalCost();
-                                  });
-                                },
-                              ),
-
-
-                                    // Gap(10),
-                                    SizedBox(
-                                      height: 150.h,
-                                      child: GridView.builder(
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 5,
-                                          mainAxisSpacing: 0,
-                                          childAspectRatio:
-                                              2.8, // Adjust item size
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                        EmployeeCountSelector(
+                                          start: widget
+                                                  .provider!
+                                                  .serviceDetails!
+                                                  .defaultNumOfEmployees ??
+                                              1,
+                                          selectedEmployeeCount:
+                                              _employeeCount ?? 1,
+                                          onChanged: (count) {
+                                            setState(() {
+                                              _employeeCount = count;
+                                              _calculateTotalCost();
+                                            });
+                                          },
                                         ),
-                                        itemCount: houses
-                                            .length,
-                                        itemBuilder: (context, index) {
-                                          return HouseItem(index);
-                                        },
-                                      ),
-                                    ),
+                                        Gap(10),
+                                        HoursCountSelector(
+                                          selectedHourCount: _hoursCount,
+                                          onChanged: (hours) {
+                                            setState(() {
+                                              _hoursCount = hours;
+                                              _calculateTotalCost();
+                                            });
+                                          },
+                                        ),
 
-                          Padding(
-                            padding: EdgeInsets.all(16.0.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: 250.w,
-                                                  child: Text(
-                                                    'with Tools'.tr(),
-                                                    style: TextStyle(
-                                                        fontSize: 16.sp,
-                                                        fontWeight: FontWeight.w400),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 20.w),
-                                                Checkbox(
-                                                  activeColor:
-                                                      ColorResources.primaryColor,
-                                                  value: _selectedItems,
-                                                  onChanged: (value) {
-                                                    setState(() {
-                                                      _selectedItems = value!;
-                                                      _calculateTotalCost();
-                                                    });
-
-                                                  },
-                                                ),
-                                              ],
+                                        // Gap(10),
+                                        SizedBox(
+                                          height: 150.h,
+                                          child: GridView.builder(
+                                            gridDelegate:
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              crossAxisSpacing: 5,
+                                              mainAxisSpacing: 0,
+                                              childAspectRatio:
+                                                  2.8, // Adjust item size
                                             ),
-                                Text(
-                                  '${ 'with Tools'.tr()} : ${widget.provider!.serviceDetails!.withTools!} AED', style: TextStyle(
-                                    fontSize: 14.sp,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  '${'employee_cost'.tr()} : ${widget.provider!.serviceDetails!.extraEmployee!} AED',
-                                  style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Colors.grey[600],
-                                      fontWeight: FontWeight.w500),
-                                ),
+                                            itemCount: houses.length,
+                                            itemBuilder: (context, index) {
+                                              return HouseItem(index);
+                                            },
+                                          ),
+                                        ),
 
-                              ],
-                            ),
-                          ),
-                                  ])
+                                        Padding(
+                                          padding: EdgeInsets.all(16.0.w),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 250.w,
+                                                    child: Text(
+                                                      'with Tools'.tr(),
+                                                      style: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 20.w),
+                                                  Checkbox(
+                                                    activeColor: ColorResources
+                                                        .primaryColor,
+                                                    value: _selectedItems,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        _selectedItems = value!;
+                                                        _calculateTotalCost();
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                '${'with Tools'.tr()} : ${widget.provider!.serviceDetails!.withTools!} AED',
+                                                style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    color: Colors.grey[600],
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              Text(
+                                                '${'employee_cost'.tr()} : ${widget.provider!.serviceDetails!.extraEmployee!} AED',
+                                                style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    color: Colors.grey[600],
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ])
                                 : Container(),
 
                             clothes != null
                                 ? SizedBox(
                                     height: 300.h,
-                                    child: GridView.builder(
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 4,
-                                        crossAxisSpacing: 5,
-                                        mainAxisSpacing: 5,
-                                        childAspectRatio:
-                                            .65, // Adjust item size
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: List.generate(
+                                          (clothes.length / 4)
+                                              .ceil(), // Number of rows needed
+                                          (rowIndex) {
+                                            // Extract 4 items per row
+                                            int startIndex = rowIndex * 4;
+                                            int endIndex = (startIndex + 4)
+                                                .clamp(0, clothes.length);
+
+                                            return Column(
+                                              children: [
+                                                // Row containing 4 items
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: clothes
+                                                      .sublist(
+                                                          startIndex, endIndex)
+                                                      .map((item) => Expanded(
+                                                            child: _buildClothingItem(
+                                                                clothes.indexOf(
+                                                                    item)),
+                                                          ))
+                                                      .toList(),
+                                                ),
+                                                // Divider after every row except the last one
+                                                if (rowIndex <
+                                                    (clothes.length / 4)
+                                                            .ceil() -
+                                                        1)
+                                                  Padding(
+                                                    padding: EdgeInsets.only(
+                                                        top: 12.0.h,
+                                                        right: 16.w,
+                                                        left: 16.w),
+                                                    child: Divider(
+                                                      thickness: 2,
+                                                      color: Colors.grey[400],
+                                                    ),
+                                                  ),
+                                              ],
+                                            );
+                                          },
+                                        ),
                                       ),
-                                      itemCount: clothes.length,
-                                      itemBuilder: (context, index) {
-                                        return _buildClothingItem(index);
-                                      },
                                     ),
                                   )
                                 : Container(),
@@ -1135,14 +593,12 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
 
   Widget _buildClothingItem(int index) {
     if (widget.provider?.serviceDetails?.clothes != null &&
-        index <
-            (widget.provider!.serviceDetails?.clothes?.length ??
-                0)) {
-      final item =
-          widget.provider!.serviceDetails?.clothes?[index];
+        index < (widget.provider!.serviceDetails?.clothes?.length ?? 0)) {
+      final item = widget.provider!.serviceDetails?.clothes?[index];
       final price = item?.price ?? 0;
       final iconPath = item?.icon ?? ''; // Assuming 'icon' holds the image path
       final name = item?.name ?? 'Item';
+      final ar_name = item?.ar_name ?? 'غرض';
 
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1157,7 +613,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
           SizedBox(height: 8),
           // Name
           Text(
-            name,
+            context.locale.languageCode == 'ar' ? ar_name : name,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             textAlign: TextAlign.center,
           ),
@@ -1180,12 +636,12 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
 
   Widget _buildCarItem(int index) {
     if (widget.provider?.serviceDetails?.cars != null &&
-        index <
-            (widget.provider!.serviceDetails?.cars?.length ?? 0)) {
+        index < (widget.provider!.serviceDetails?.cars?.length ?? 0)) {
       final item = widget.provider!.serviceDetails?.cars?[index];
       final price = item?.price ?? 0;
       final iconPath = item?.icon ?? '';
       final name = item?.name ?? 'Item';
+      final ar_name = item?.ar_name ?? 'غرض';
 
       return Padding(
         padding: EdgeInsets.all(20.0.w),
@@ -1205,7 +661,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  context.locale.languageCode == 'ar' ? ar_name : name,
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                   textAlign: TextAlign.center,
                 ),
@@ -1268,7 +724,6 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
     }
   }
 
-
   Widget HouseItem(int index) {
     if (widget.provider?.serviceDetails?.house != null &&
         index < (widget.provider!.serviceDetails!.house?.length ?? 0)) {
@@ -1276,6 +731,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
       final price = serviceItem.price ?? 0;
       final iconPath = serviceItem.icon ?? '';
       final name = serviceItem.name ?? 'Item';
+      final arName = serviceItem.ar_name ?? 'غرض';
       return Container(
         margin: EdgeInsets.symmetric(vertical: 5.h),
         width: context.width / 2 - 33.w,
@@ -1299,7 +755,7 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
             SizedBox(
               width: 80.w,
               child: Text(
-                name,
+                context.locale.languageCode == 'ar' ? arName : name,
                 style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -1308,17 +764,22 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
             ),
             Checkbox(
               activeColor: ColorResources.primaryColor,
-              value: selectedServicesBool.contains(index), // Default to false if not in the map
+              value: selectedServicesBool
+                  .contains(index), // Default to false if not in the map
               onChanged: (value) {
                 setState(() {
                   if (value == true) {
                     // When selected, store the service price in selectedServices map
-                    selectedServicesBool.add(index); // Mark the service as selected
-                    selectedServices[index] = price; // Save the price of the selected service in the map
+                    selectedServicesBool
+                        .add(index); // Mark the service as selected
+                    selectedServices[index] =
+                        price; // Save the price of the selected service in the map
                   } else {
                     // When deselected, remove the service price from selectedServices map
-                    selectedServicesBool.remove(index); // Mark the service as deselected
-                    selectedServices.remove(index); // Remove the price from the selectedServices map
+                    selectedServicesBool
+                        .remove(index); // Mark the service as deselected
+                    selectedServices.remove(
+                        index); // Remove the price from the selectedServices map
                   }
 
                   // Recalculate the total cost
@@ -1354,7 +815,6 @@ class _StoreDetailsPageState extends State<StoreDetailsPage> {
     );
   }
 }
-
 
 class EmployeeCountSelector extends StatefulWidget {
   final ValueChanged<int> onChanged;
@@ -1425,7 +885,8 @@ class _EmployeeCountSelectorState extends State<EmployeeCountSelector> {
                         style: TextStyle(
                           color: _selectedEmployeeCount == i
                               ? ColorResources.white // Text color when selected
-                              : ColorResources.primaryColor, // Default text color
+                              : ColorResources
+                                  .primaryColor, // Default text color
                           fontWeight: FontWeight.w500,
                           fontSize: 18.sp,
                         ),
@@ -1440,8 +901,6 @@ class _EmployeeCountSelectorState extends State<EmployeeCountSelector> {
     );
   }
 }
-
-
 
 class HoursCountSelector extends StatefulWidget {
   final int selectedHourCount;
@@ -1472,7 +931,8 @@ class _HoursCountSelectorState extends State<HoursCountSelector> {
           ),
         ),
         Gap(5),
-        SingleChildScrollView( // Added SingleChildScrollView for horizontal scrolling
+        SingleChildScrollView(
+          // Added SingleChildScrollView for horizontal scrolling
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
@@ -1498,7 +958,8 @@ class _HoursCountSelectorState extends State<HoursCountSelector> {
                         style: TextStyle(
                           color: widget.selectedHourCount == i
                               ? ColorResources.white // Text color when selected
-                              : ColorResources.primaryColor, // Default text color
+                              : ColorResources
+                                  .primaryColor, // Default text color
                           fontWeight: FontWeight.w500,
                           fontSize: 18.sp,
                         ),
@@ -1514,107 +975,4 @@ class _HoursCountSelectorState extends State<HoursCountSelector> {
   }
 }
 
-/// House
-//  SizedBox(
-//                                         height: 250.h,
-//                                         child: GridView.builder(
-//                                           gridDelegate:
-//                                               SliverGridDelegateWithFixedCrossAxisCount(
-//                                             crossAxisCount: 4,
-//                                             crossAxisSpacing: 5,
-//                                             mainAxisSpacing: 5,
-//                                             childAspectRatio:
-//                                                 0.5, // Adjust item size
-//                                           ),
-//                                           itemCount: widget
-//                                               .provider!
-//                                               .serviceDetails!
-//                                               .services!['House']!
-//                                               .length,
-//                                           itemBuilder: (context, index) {
-//                                             return _buildHouseItem(index);
-//                                           },
-//                                         ),
-//                                       ),
-//                                       Row(
-//                                         mainAxisAlignment:
-//                                             MainAxisAlignment.spaceBetween,
-//                                         children: [
-//                                           SizedBox(
-//                                             width: 250.w,
-//                                             child: Column(
-//                                               crossAxisAlignment: CrossAxisAlignment.start,
-//                                               children: [
-//                                                 Text(
-//                                                   'employee'.tr(),
-//                                                   style: TextStyle(
-//                                                       fontSize: 16.sp,
-//                                                       fontWeight: FontWeight.w500),
-//                                                 ),
-//                                                 Text(
-//                                                   '${'employee_cost'.tr()} : ${widget.provider!.serviceDetails!.employeePrice!} AED',
-//                                                   style: TextStyle(
-//                                                       fontSize: 14.sp,
-//                                                       color: Colors.grey[400],
-//                                                       fontWeight: FontWeight.w500),
-//                                                 )
-//                                               ],
-//                                             ),
-//                                           ),
-//                                           SizedBox(
-//                                             width: 30,
-//                                             height: 30,
-//                                             child: TextField(
-//
-//                                               decoration: InputDecoration(
-//                                                 hintStyle: TextStyle(
-//                                                     color: Colors.black),
-//                                                 border: OutlineInputBorder(),
-//                                                 contentPadding:
-//                                                     EdgeInsets.symmetric(
-//                                                         horizontal: 8),
-//                                                 hintText: '1',
-//
-//                                               ),
-//                                               keyboardType:
-//                                                   TextInputType.number,
-//                                               onChanged: (value) {
-//                                                 int count =
-//                                                     int.tryParse(value) ?? 0;
-//                                                 _updateEmployeeCount(
-//                                                     count); // Update employee count
-//                                               },
-//                                             ),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                       Row(
-//                                         mainAxisAlignment:
-//                                             MainAxisAlignment.spaceBetween,
-//                                         children: [
-//                                           SizedBox(
-//                                             width: 250.w,
-//                                             child: Text(
-//                                               'with Tools'.tr(),
-//                                               style: TextStyle(
-//                                                   fontSize: 16.sp,
-//                                                   fontWeight: FontWeight.w400),
-//                                             ),
-//                                           ),
-//                                           SizedBox(width: 20.w),
-//                                           Checkbox(
-//                                             activeColor:
-//                                                 ColorResources.primaryColor,
-//                                             value: _selectedItems,
-//                                             onChanged: (value) {
-//                                               setState(() {
-//                                                 _selectedItems = value!;
-//                                                 _calculateTotalCost();
-//                                               });
-//                                               logger.i(value);
-//                                               logger.i(_totalCost);
-//                                             },
-//                                           ),
-//                                         ],
-//                                       ),
 ///keytool -list -v -keystore "E:\work\daily_wash_client\key\daily_v1.jks"
